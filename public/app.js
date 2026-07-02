@@ -1701,6 +1701,125 @@ function bindEvents() {
     const card = document.querySelector(`.finding-card[data-finding-id="${CSS.escape(mark.dataset.findingId)}"]`);
     if (card) card.scrollIntoView({ behavior: "smooth", block: "center" });
   });
+
+  // Attach interactive Apple scrollytelling window scroll handler
+  window.addEventListener("scroll", () => {
+    if (state.activeView === "intro") {
+      handleIntroScroll();
+    }
+  });
+}
+
+function handleIntroScroll() {
+  const overviewSection = document.getElementById("overviewScrolly");
+  const stepsSection = document.getElementById("stepsScrolly");
+
+  // Section 1: Overview Scrollytelling
+  if (overviewSection) {
+    const rect = overviewSection.getBoundingClientRect();
+    const sectionHeight = rect.height;
+    const viewHeight = window.innerHeight;
+    const topOffset = rect.top;
+
+    const stickyStart = 76;
+    const stickyEnd = stickyStart - (sectionHeight - viewHeight);
+
+    const titleEl = overviewSection.querySelector(".scrolly-title");
+    const lineEls = overviewSection.querySelectorAll(".scrolly-line");
+
+    if (topOffset <= stickyStart && topOffset >= stickyEnd - 100) {
+      if (titleEl) titleEl.classList.add("is-visible");
+      
+      const scrollableDist = sectionHeight - viewHeight;
+      const scrolled = stickyStart - topOffset;
+      const progress = Math.min(Math.max(scrolled / scrollableDist, 0), 1);
+
+      lineEls.forEach((line, index) => {
+        // Line 0 starts at 0.05, Line 1 at 0.35, Line 2 at 0.65
+        const triggerPoint = 0.05 + (index * 0.3);
+        const lineProgress = Math.min(Math.max((progress - triggerPoint) / 0.25, 0), 1);
+
+        const minOpacity = 0.15;
+        const maxOpacity = 1;
+        const opacity = minOpacity + (maxOpacity - minOpacity) * lineProgress;
+        const yOffset = 30 * (1 - lineProgress); // Slide up from 30px to 0px
+
+        line.style.opacity = opacity;
+        line.style.transform = `translateY(${yOffset}px)`;
+        
+        if (lineProgress > 0.8) {
+          line.classList.add("is-active");
+        } else {
+          line.classList.remove("is-active");
+        }
+      });
+    } else {
+      if (topOffset > stickyStart) {
+        if (titleEl) titleEl.classList.remove("is-visible");
+        lineEls.forEach(line => {
+          line.style.opacity = 0.15;
+          line.style.transform = "translateY(30px)";
+        });
+      }
+    }
+  }
+
+  // Section 2: Steps Interactive Scrollytelling
+  if (stepsSection) {
+    const rect = stepsSection.getBoundingClientRect();
+    const sectionHeight = rect.height;
+    const viewHeight = window.innerHeight;
+    const topOffset = rect.top;
+
+    const stickyStart = 76;
+    const scrollableDist = sectionHeight - viewHeight;
+    const scrolled = stickyStart - topOffset;
+    const progress = Math.min(Math.max(scrolled / scrollableDist, 0), 1);
+
+    const descItems = stepsSection.querySelectorAll(".step-desc-item");
+    const mockViews = stepsSection.querySelectorAll(".mock-step-view");
+
+    // We have 3 steps: 0, 1, 2
+    let activeStep = 0;
+    if (progress > 0.33 && progress <= 0.66) {
+      activeStep = 1;
+    } else if (progress > 0.66) {
+      activeStep = 2;
+    }
+
+    // Toggle active state classes for left descriptions
+    descItems.forEach((item, index) => {
+      if (index === activeStep) {
+        item.classList.add("is-active");
+      } else {
+        item.classList.remove("is-active");
+      }
+    });
+
+    // Toggle active state classes for right mockup views
+    mockViews.forEach((view, index) => {
+      if (index === activeStep) {
+        view.classList.add("is-active");
+      } else {
+        view.classList.remove("is-active");
+      }
+    });
+
+    // Step 1: PII progressive blurs
+    const blurBoxes = stepsSection.querySelectorAll(".mock-blur-box");
+    if (activeStep === 0) {
+      blurBoxes.forEach((box, i) => {
+        // simulate slight stagger blur activation
+        setTimeout(() => {
+          if (stepsSection.querySelectorAll(".mock-step-view.is-active[data-step='0']").length > 0) {
+            box.classList.add("is-blurred");
+          }
+        }, i * 200);
+      });
+    } else {
+      blurBoxes.forEach(box => box.classList.remove("is-blurred"));
+    }
+  }
 }
 
 function bindDropzone(dropzone) {
@@ -1783,3 +1902,49 @@ function stopParticles() {
 
 bindEvents();
 showIntro();
+
+
+// === Scrolly Reveal & Parallax Logic ===
+document.addEventListener("DOMContentLoaded", () => {
+  // Intersection Observer for revealing feature cards
+  const revealElements = document.querySelectorAll('.scrolly-reveal');
+  
+  const revealObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        // Add a slight stagger delay if it's a feature card
+        const index = entry.target.getAttribute('data-feature') || 0;
+        setTimeout(() => {
+          entry.target.classList.add('is-visible');
+        }, index * 100); // 100ms stagger between cards
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    root: null,
+    threshold: 0.15,
+    rootMargin: "0px 0px -50px 0px"
+  });
+
+  revealElements.forEach(el => revealObserver.observe(el));
+
+  // Parallax effect for flying Chim Lac background
+  const chimlacBg = document.querySelector('.flying-chimlac-bg');
+  const chimlacFlies = document.querySelectorAll('.chimlac-fly');
+  
+  if (chimlacBg && chimlacFlies.length > 0) {
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      
+      // Move each bird differently based on scroll
+      chimlacFlies.forEach((fly, idx) => {
+        const speed = (idx + 1) * 0.15; // Different speed for each bird
+        const yOffset = scrollY * speed;
+        // Optionally add a slight horizontal drift
+        const xOffset = Math.sin(scrollY * 0.005 + idx) * 50; 
+        
+        fly.style.transform = `translate(${xOffset}px, ${-yOffset}px)`;
+      });
+    });
+  }
+});

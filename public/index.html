@@ -45,115 +45,483 @@
 
         <div class="top-actions">
           <button class="ghost-btn" id="homeBtn" type="button">Trang đầu</button>
-          <button class="ghost-btn" id="sampleBtn" type="button">Mẫu demo</button>
+          <button class="ghost-btn demo-highlight-btn" id="sampleBtn" type="button">Mẫu demo</button>
           <button class="primary-btn" id="exportBtn" type="button">Xuất PDF</button>
         </div>
       </header>
 
-      <section class="intro-view view" id="introView">
-        <canvas id="ambientParticles" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0;"></canvas>
-        <div class="watermark-container drum-watermark" aria-hidden="true">
-          <svg class="trong-dong-watermark" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
-            <g fill="none" stroke="currentColor" stroke-width="1.2">
-              <path d="M 200,165 L 204,188 L 222,180 L 213,196 L 232,200 L 213,204 L 222,220 L 204,212 L 200,235 L 196,212 L 178,220 L 187,204 L 168,200 L 187,196 L 178,180 L 196,188 Z" fill="currentColor" opacity="0.6" />
-              <circle cx="200" cy="200" r="45" />
-              <circle cx="200" cy="200" r="62" stroke-dasharray="2, 4" />
-              <circle cx="200" cy="200" r="90" />
-              <circle cx="200" cy="200" r="110" stroke-dasharray="8, 6" />
-              <circle cx="200" cy="200" r="135" stroke-dasharray="2, 3" />
-              <circle cx="200" cy="200" r="155" stroke-width="1.8" />
-              <circle cx="200" cy="200" r="172" stroke-dasharray="10, 8" />
-              <circle cx="200" cy="200" r="185" stroke-width="2.5" />
-              <path d="M 90,200 A 110,110 0 0,1 200,90" stroke-dasharray="4, 15" stroke-width="2.2" />
-              <path d="M 200,90 A 110,110 0 0,1 310,200" stroke-dasharray="4, 15" stroke-width="2.2" />
-              <path d="M 310,200 A 110,110 0 0,1 200,310" stroke-dasharray="4, 15" stroke-width="2.2" />
-              <path d="M 200,310 A 110,110 0 0,1 90,200" stroke-dasharray="4, 15" stroke-width="2.2" />
-            </g>
-          </svg>
-        </div>
-        <div class="watermark-container intro-watermark" aria-hidden="true">
-          <svg class="chim-lac-watermark" viewBox="0 0 500 200" xmlns="http://www.w3.org/2000/svg">
-            <g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M 20,75 L 210,75 L 210,115 L 20,115 Z" />
-              <path d="M 210,40 L 255,40 L 255,75 M 255,115 L 255,175 L 210,175 L 210,115" />
-              <path d="M 210,75 L 210,40 M 210,175 L 210,115" />
-              <path d="M 255,75 C 285,75 315,62 335,58" />
-              <path d="M 255,115 C 285,115 315,102 335,88" />
-              <path d="M 335,58 L 485,25" />
-              <path d="M 335,88 L 485,25" />
-              <path d="M 335,58 C 342,65 342,80 335,88" />
-              <circle cx="342" cy="73" r="4" />
-              <circle cx="342" cy="73" r="1" fill="currentColor" />
-              <path d="M 342,69 L 348,38" />
-              <path d="M 348,38 L 374,35 L 378,14 L 352,17 Z" />
-              <path d="M 356,29 L 356,23 L 359,23" stroke-width="1.8" />
-              <path d="M 361,28 L 363,22 L 365,28 M 362,26 L 364,26" stroke-width="1.8" />
-              <path d="M 370,27 C 367,27 367,23 370,23" stroke-width="1.8" />
-              <path d="M 372,21 L 374,21 M 373,23 L 373,24 L 373,26" stroke-width="1.8" />
-              <path d="M 125,115 C 120,126 112,132 105,132" />
-              <path d="M 105,132 L 103,130 L 105,128 L 107,130 Z" fill="currentColor" />
-              <path d="M 125,119 C 120,132 108,139 98,139" />
-              <path d="M 98,139 L 96,137 L 98,135 L 100,137 Z" fill="currentColor" />
-              <path d="M 28,83 L 202,83" stroke-width="1.8" />
-              <path d="M 28,91 L 120,91 M 132,91 L 202,91" stroke-width="1.8" />
-              <path d="M 28,99 L 80,99 L 80,107 L 28,107" stroke-width="1.8" />
-              <path d="M 92,99 L 202,99" stroke-width="1.8" />
-              <path d="M 92,107 L 202,107" stroke-width="1.8" />
-              <path d="M 60,83 L 60,91" stroke-width="1.8" />
-              <path d="M 100,91 L 100,99 M 115,99 L 115,107" stroke-width="1.8" />
-              <path d="M 150,83 L 150,91 M 170,99 L 170,107" stroke-width="1.8" />
-              <path d="M 218,48 L 247,48" stroke-width="1.8" />
-              <path d="M 218,56 L 218,68 L 247,68" stroke-width="1.8" />
-              <path d="M 232,48 L 232,56" stroke-width="1.8" />
-              <path d="M 247,56 L 247,68" stroke-width="1.8" />
-              <path d="M 218,167 L 247,167" stroke-width="1.8" />
-              <path d="M 218,159 L 218,125 L 247,125" stroke-width="1.8" />
-              <path d="M 232,159 L 232,167 M 247,135 L 247,159" stroke-width="1.8" />
-            </g>
-          </svg>
-        </div>
-        <div class="intro-copy">
-          <p class="eyebrow">Zero-prompt contract review</p>
-          <h2>Rà soát hợp đồng trước khi ký</h2>
-          <p class="intro-lead">
-            Upload hợp đồng, hệ thống tự ẩn dữ liệu nhạy cảm và trả về báo cáo Đỏ - Vàng - Xanh.
-          </p>
-          <div class="intro-stats" aria-label="Thông số demo">
-            <span><strong>40</strong> hạng mục</span>
-            <span><strong>PII</strong> redaction</span>
-            <span><strong>P1</strong> ưu tiên sửa</span>
+      <div class="intro-view view" id="introView">
+        <section class="intro-hero" id="introHero">
+          <canvas id="ambientParticles" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0;"></canvas>
+          <div class="watermark-container drum-watermark" aria-hidden="true">
+            <svg class="trong-dong-watermark" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+              <g fill="none" stroke="currentColor" stroke-width="1.2">
+                <path d="M 200,165 L 204,188 L 222,180 L 213,196 L 232,200 L 213,204 L 222,220 L 204,212 L 200,235 L 196,212 L 178,220 L 187,204 L 168,200 L 187,196 L 178,180 L 196,188 Z" fill="currentColor" opacity="0.6" />
+                <circle cx="200" cy="200" r="45" />
+                <circle cx="200" cy="200" r="62" stroke-dasharray="2, 4" />
+                <circle cx="200" cy="200" r="90" />
+                <circle cx="200" cy="200" r="110" stroke-dasharray="8, 6" />
+                <circle cx="200" cy="200" r="135" stroke-dasharray="2, 3" />
+                <circle cx="200" cy="200" r="155" stroke-width="1.8" />
+                <circle cx="200" cy="200" r="172" stroke-dasharray="10, 8" />
+                <circle cx="200" cy="200" r="185" stroke-width="2.5" />
+                <path d="M 90,200 A 110,110 0 0,1 200,90" stroke-dasharray="4, 15" stroke-width="2.2" />
+                <path d="M 200,90 A 110,110 0 0,1 310,200" stroke-dasharray="4, 15" stroke-width="2.2" />
+                <path d="M 310,200 A 110,110 0 0,1 200,310" stroke-dasharray="4, 15" stroke-width="2.2" />
+                <path d="M 200,310 A 110,110 0 0,1 90,200" stroke-dasharray="4, 15" stroke-width="2.2" />
+              </g>
+            </svg>
           </div>
-        </div>
-
-        <div class="intro-upload-panel">
-          <label class="dropzone intro-dropzone" id="heroDropzone">
-            <input id="heroFileInput" type="file" accept=".docx,.txt,.pdf" />
-            <span class="upload-symbol" aria-hidden="true">+</span>
-            <span class="drop-title" id="heroFileLabel">Chọn DOCX, TXT hoặc PDF</span>
-            <span class="drop-subtitle" id="heroFileSubLabel">80MB tối đa</span>
-          </label>
-
-          <div class="intro-actions">
-            <button class="primary-btn" id="heroScanBtn" type="button" disabled>Quét rủi ro</button>
-            <button class="ghost-btn" id="heroPasteBtn" type="button">Dán text</button>
-            <button class="ghost-btn" id="heroSampleBtn" type="button">Chạy mẫu demo</button>
+          <div class="watermark-container intro-watermark" aria-hidden="true">
+            <svg class="chim-lac-watermark" viewBox="0 0 500 200" xmlns="http://www.w3.org/2000/svg">
+              <g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M 20,75 L 210,75 L 210,115 L 20,115 Z" />
+                <path d="M 210,40 L 255,40 L 255,75 M 255,115 L 255,175 L 210,175 L 210,115" />
+                <path d="M 210,75 L 210,40 M 210,175 L 210,115" />
+                <path d="M 255,75 C 285,75 315,62 335,58" />
+                <path d="M 255,115 C 285,115 315,102 335,88" />
+                <path d="M 335,58 L 485,25" />
+                <path d="M 335,88 L 485,25" />
+                <path d="M 335,58 C 342,65 342,80 335,88" />
+                <circle cx="342" cy="73" r="4" />
+                <circle cx="342" cy="73" r="1" fill="currentColor" />
+                <path d="M 342,69 L 348,38" />
+                <path d="M 348,38 L 374,35 L 378,14 L 352,17 Z" />
+                <path d="M 356,29 L 356,23 L 359,23" stroke-width="1.8" />
+                <path d="M 361,28 L 363,22 L 365,28 M 362,26 L 364,26" stroke-width="1.8" />
+                <path d="M 370,27 C 367,27 367,23 370,23" stroke-width="1.8" />
+                <path d="M 372,21 L 374,21 M 373,23 L 373,24 L 373,26" stroke-width="1.8" />
+                <path d="M 125,115 C 120,126 112,132 105,132" />
+                <path d="M 105,132 L 103,130 L 105,128 L 107,130 Z" fill="currentColor" />
+                <path d="M 125,119 C 120,132 108,139 98,139" />
+                <path d="M 98,139 L 96,137 L 98,135 L 100,137 Z" fill="currentColor" />
+                <path d="M 28,83 L 202,83" stroke-width="1.8" />
+                <path d="M 28,91 L 120,91 M 132,91 L 202,91" stroke-width="1.8" />
+                <path d="M 28,99 L 80,99 L 80,107 L 28,107" stroke-width="1.8" />
+                <path d="M 92,99 L 202,99" stroke-width="1.8" />
+                <path d="M 92,107 L 202,107" stroke-width="1.8" />
+                <path d="M 60,83 L 60,91" stroke-width="1.8" />
+                <path d="M 100,91 L 100,99 M 115,99 L 115,107" stroke-width="1.8" />
+                <path d="M 150,83 L 150,91 M 170,99 L 170,107" stroke-width="1.8" />
+                <path d="M 218,48 L 247,48" stroke-width="1.8" />
+                <path d="M 218,56 L 218,68 L 247,68" stroke-width="1.8" />
+                <path d="M 232,48 L 232,56" stroke-width="1.8" />
+                <path d="M 247,56 L 247,68" stroke-width="1.8" />
+                <path d="M 218,167 L 247,167" stroke-width="1.8" />
+                <path d="M 218,159 L 218,125 L 247,125" stroke-width="1.8" />
+                <path d="M 232,159 L 232,167 M 247,135 L 247,159" stroke-width="1.8" />
+              </g>
+            </svg>
           </div>
-
-          <div class="intro-preview" aria-hidden="true">
-            <div class="preview-doc">
-              <span></span>
-              <span></span>
-              <span class="danger-line"></span>
-              <span></span>
-              <span class="warn-line"></span>
-            </div>
-            <div class="preview-disclaimer">
-              <strong>Miễn trừ trách nhiệm</strong>
-              <p>Kết quả rà soát tự động mang tính chất tham khảo, hỗ trợ phát hiện rủi ro sơ bộ và không thay thế ý kiến tư vấn pháp lý chuyên nghiệp từ luật sư.</p>
+          <div class="intro-copy">
+            <p class="eyebrow">Zero-prompt contract review</p>
+            <h2>Rà soát hợp đồng trước khi ký</h2>
+            <p class="intro-lead">
+              Upload hợp đồng, hệ thống tự ẩn dữ liệu nhạy cảm và trả về báo cáo Đỏ - Vàng - Xanh.
+            </p>
+            <div class="intro-stats" aria-label="Thông số demo">
+              <span><strong>40</strong> hạng mục</span>
+              <span><strong>PII</strong> redaction</span>
+              <span><strong>P1</strong> ưu tiên sửa</span>
             </div>
           </div>
-        </div>
-      </section>
+
+          <div class="intro-upload-panel">
+            <label class="dropzone intro-dropzone" id="heroDropzone">
+              <input id="heroFileInput" type="file" accept=".docx,.txt,.pdf" />
+              <span class="upload-symbol" aria-hidden="true">+</span>
+              <span class="drop-title" id="heroFileLabel">Chọn DOCX, TXT hoặc PDF</span>
+              <span class="drop-subtitle" id="heroFileSubLabel">80MB tối đa</span>
+            </label>
+
+            <div class="intro-actions">
+              <button class="primary-btn" id="heroScanBtn" type="button" disabled>Quét rủi ro</button>
+              <button class="ghost-btn" id="heroPasteBtn" type="button">Dán text</button>
+              <button class="ghost-btn demo-highlight-btn" id="heroSampleBtn" type="button">Chạy mẫu demo</button>
+            </div>
+
+            <div class="intro-preview" aria-hidden="true">
+              <div class="preview-doc">
+                <span></span>
+                <span></span>
+                <span class="danger-line"></span>
+                <span></span>
+                <span class="warn-line"></span>
+              </div>
+              <div class="preview-disclaimer">
+                <strong>Miễn trừ trách nhiệm</strong>
+                <p>Kết quả rà soát tự động mang tính chất tham khảo.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Scroll Down Indicator -->
+          <div class="scroll-indicator" id="scrollIndicator">
+            <span class="scroll-indicator-text">ContractGuard AI là gì? Cuộn xuống để khám phá</span>
+            <div class="scroll-indicator-arrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="20" height="20">
+                <path d="M12 5v14M5 12l7 7 7-7"/>
+              </svg>
+            </div>
+          </div>
+        </section>
+
+        <!-- Scrollytelling Section 1: "ContractGuard AI là gì?" with Flying Chim Lac -->
+        <section class="intro-overview-scrolly" id="overviewScrolly">
+          <!-- Flying Chim Lac Watermark Background -->
+          <div class="flying-chimlac-bg" aria-hidden="true">
+            <svg class="chimlac-fly fly-1" viewBox="0 0 120 50" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5,25 L40,25 L40,35 L5,35Z"/><path d="M40,15 L55,15 L55,45 L40,45Z"/><path d="M55,22 C65,22 75,18 82,16"/><path d="M55,35 C65,35 75,30 82,27"/><path d="M82,16 L115,7"/><path d="M82,27 L115,7"/><path d="M82,16 C85,19 85,24 82,27"/><circle cx="84" cy="21" r="2"/></g></svg>
+            <svg class="chimlac-fly fly-2" viewBox="0 0 120 50" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5,25 L40,25 L40,35 L5,35Z"/><path d="M40,15 L55,15 L55,45 L40,45Z"/><path d="M55,22 C65,22 75,18 82,16"/><path d="M55,35 C65,35 75,30 82,27"/><path d="M82,16 L115,7"/><path d="M82,27 L115,7"/><path d="M82,16 C85,19 85,24 82,27"/><circle cx="84" cy="21" r="2"/></g></svg>
+            <svg class="chimlac-fly fly-3" viewBox="0 0 120 50" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5,25 L40,25 L40,35 L5,35Z"/><path d="M40,15 L55,15 L55,45 L40,45Z"/><path d="M55,22 C65,22 75,18 82,16"/><path d="M55,35 C65,35 75,30 82,27"/><path d="M82,16 L115,7"/><path d="M82,27 L115,7"/><path d="M82,16 C85,19 85,24 82,27"/><circle cx="84" cy="21" r="2"/></g></svg>
+            <svg class="chimlac-fly fly-4" viewBox="0 0 120 50" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5,25 L40,25 L40,35 L5,35Z"/><path d="M40,15 L55,15 L55,45 L40,45Z"/><path d="M55,22 C65,22 75,18 82,16"/><path d="M55,35 C65,35 75,30 82,27"/><path d="M82,16 L115,7"/><path d="M82,27 L115,7"/><path d="M82,16 C85,19 85,24 82,27"/><circle cx="84" cy="21" r="2"/></g></svg>
+            <svg class="chimlac-fly fly-5" viewBox="0 0 120 50" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5,25 L40,25 L40,35 L5,35Z"/><path d="M40,15 L55,15 L55,45 L40,45Z"/><path d="M55,22 C65,22 75,18 82,16"/><path d="M55,35 C65,35 75,30 82,27"/><path d="M82,16 L115,7"/><path d="M82,27 L115,7"/><path d="M82,16 C85,19 85,24 82,27"/><circle cx="84" cy="21" r="2"/></g></svg>
+          </div>
+          <div class="scrolly-sticky-container">
+            <div class="scrolly-centered-content">
+              <h2 class="scrolly-title">ContractGuard AI là gì?</h2>
+              <div class="scrolly-lines">
+                <p class="scrolly-line" data-index="0">Hệ thống tự động rà soát rủi ro pháp lý cho hợp đồng bằng AI chuyên sâu tại Việt Nam.</p>
+                <p class="scrolly-line" data-index="1">Bảo vệ dòng tiền, triệt tiêu bẫy điều khoản, tự động hóa quy trình pháp chế chỉ trong 60 giây.</p>
+                <p class="scrolly-line" data-index="2">Được phát triển riêng cho hệ thống pháp luật Việt Nam — chính xác, đáng tin cậy và miễn phí.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Scrollytelling Section 2: Feature Showcase — 10 Advantages -->
+        <section class="intro-features-scrolly" id="featuresScrolly">
+          <div class="scrolly-sticky-container">
+            <div class="features-showcase">
+              <div class="features-header">
+                <p class="features-eyebrow">Ưu điểm vượt trội</p>
+                <h2 class="features-main-title scrolly-reveal">Tại sao chọn ContractGuard AI?</h2>
+                <p class="features-subtitle scrolly-reveal">Mỗi tính năng được thiết kế để bảo vệ quyền lợi pháp lý của bạn</p>
+              </div>
+              <div class="features-grid" id="featuresGrid">
+                <div class="feature-card scrolly-reveal" data-feature="0">
+                  <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+                  </div>
+                  <h3>PII Redaction tự động</h3>
+                  <p>Tự động phát hiện và ẩn giấu CMND, SĐT, địa chỉ, tên riêng ngay trên trình duyệt trước khi gửi phân tích.</p>
+                </div>
+                <div class="feature-card scrolly-reveal" data-feature="1">
+                  <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+                  </div>
+                  <h3>40+ hạng mục rà soát</h3>
+                  <p>Phân tích toàn diện với hơn 40 tiêu chí pháp lý: từ quyền chấm dứt, gia hạn tự động, đến bất đối xứng rủi ro.</p>
+                </div>
+                <div class="feature-card scrolly-reveal" data-feature="2">
+                  <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                  </div>
+                  <h3>Đối chiếu Luật Việt Nam (RAG)</h3>
+                  <p>Kết hợp cơ sở dữ liệu Bộ luật Dân sự, Luật Nhà ở, Luật Thương mại để đối chiếu từng điều khoản với quy định pháp luật.</p>
+                </div>
+                <div class="feature-card scrolly-reveal" data-feature="3">
+                  <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                  </div>
+                  <h3>Phân tích trong 60 giây</h3>
+                  <p>Từ tải lên đến báo cáo hoàn chỉnh chỉ trong một phút — nhanh hơn bất kỳ luật sư nào mà vẫn chính xác.</p>
+                </div>
+                <div class="feature-card scrolly-reveal" data-feature="4">
+                  <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+                  </div>
+                  <h3>Báo cáo Đỏ-Vàng-Xanh</h3>
+                  <p>Trực quan hoá ngay mức độ rủi ro: P1 (Đỏ — Sửa ngay), P2 (Vàng — Nên đàm phán), P3 (Xanh — An toàn). Không cần chuyên gia đọc hộ.</p>
+                </div>
+                <div class="feature-card scrolly-reveal" data-feature="5">
+                  <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  </div>
+                  <h3>Chatbot hỏi đáp pháp lý</h3>
+                  <p>Hỏi bất kỳ câu hỏi nào về hợp đồng — AI trả lời dựa trên nội dung thực tế của tài liệu và luật pháp Việt Nam.</p>
+                </div>
+                <div class="feature-card scrolly-reveal" data-feature="6">
+                  <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M16 13H8M16 17H8M10 9H8"/></svg>
+                  </div>
+                  <h3>Xuất PDF chuyên nghiệp</h3>
+                  <p>Tạo báo cáo PDF chi tiết với tóm tắt, đánh giá rủi ro, đề xuất sửa đổi và trích dẫn gốc — sẵn sàng in hoặc gửi email.</p>
+                </div>
+                <div class="feature-card scrolly-reveal" data-feature="7">
+                  <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                  </div>
+                  <h3>Gợi ý câu đàm phán</h3>
+                  <p>AI đề xuất cách viết lại điều khoản bất lợi — giúp bạn đàm phán với chủ nhà, đối tác hoặc tổ chức tài chính.</p>
+                </div>
+                <div class="feature-card scrolly-reveal" data-feature="8">
+                  <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                  </div>
+                  <h3>Deep Scan Scoring</h3>
+                  <p>Phân tích sâu từng điều khoản với thang điểm riêng: tiền cọc, phạt hợp đồng, mức độ rủi ro tài chính — tất cả trích dẫn từ hợp đồng gốc.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Comparison Section -->
+        <section class="intro-comparison-section" id="comparisonSection">
+          <div class="comparison-container">
+            <div class="comparison-header">
+              <p class="features-eyebrow">So sánh giải pháp</p>
+              <h2 class="comparison-main-title scrolly-reveal">Vượt trội so với các lựa chọn hiện tại</h2>
+            </div>
+            
+            <div class="comparison-table-wrapper scrolly-reveal">
+              <table class="comparison-table">
+                <thead>
+                  <tr>
+                    <th>Tiêu chí</th>
+                    <th class="highlight-col">
+                      <div class="highlight-header">
+                        <span class="badge">Dự án</span>
+                        ContractGuard AI
+                      </div>
+                    </th>
+                    <th>Sử dụng AI đại trà<br><small>(ChatGPT/Gemini)</small></th>
+                    <th>Luật sư / Chuyên gia<br><small>pháp lý truyền thống</small></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="criteria">Trải nghiệm & rào cản UX</td>
+                    <td class="highlight-col"><b>Zero-Prompt:</b> người dùng chỉ cần chụp ảnh hoặc tải hợp đồng. Kết quả trả về biểu đồ rủi ro Đỏ - Vàng - Xanh ngay trên văn bản.</td>
+                    <td>Khó dùng với người phổ thông. Chất lượng phụ thuộc vào khả năng viết prompt và cách đặt câu hỏi.</td>
+                    <td>Cồng kềnh: cần đặt lịch, gửi hồ sơ, trao đổi nhiều lần; không phù hợp với hợp đồng giá trị nhỏ cần phản hồi nhanh.</td>
+                  </tr>
+                  <tr>
+                    <td class="criteria">Độ tin cậy & tính chuyên biệt</td>
+                    <td class="highlight-col">Neo vào pháp luật Việt Nam và bộ checklist rà soát hợp đồng. Mỗi rủi ro có giải thích, trích dẫn và gợi ý sửa.</td>
+                    <td>Có thể nhầm luật giữa các quốc gia, trả lời chung chung hoặc bỏ sót điều khoản nếu prompt không đủ tốt.</td>
+                    <td>Rất cao nếu đúng chuyên gia, nhưng phụ thuộc vào thời gian, chi phí và mức độ sẵn sàng hỗ trợ.</td>
+                  </tr>
+                  <tr>
+                    <td class="criteria">Ngôn ngữ giải thích</td>
+                    <td class="highlight-col">Dịch điều khoản pháp lý thành hậu quả đời thường: mất cọc, bị phạt, khó đòi bồi thường, bị ràng buộc bất lợi.</td>
+                    <td>Thường trả lời bằng văn bản dài, người dùng vẫn phải tự lọc và tự hiểu.</td>
+                    <td>Có thể dùng nhiều thuật ngữ chuyên môn, khó tiếp cận với người lớn tuổi hoặc người thiếu kiến thức pháp lý.</td>
+                  </tr>
+                  <tr>
+                    <td class="criteria">Tính bảo mật</td>
+                    <td class="highlight-col">Ẩn danh CCCD, địa chỉ, số điện thoại, tài khoản ngân hàng trước khi xử lý; file được xóa sau khi phân tích.</td>
+                    <td>Rủi ro đưa dữ liệu nhạy cảm lên nền tảng AI công cộng hoặc lưu lại trong môi trường không kiểm soát.</td>
+                    <td>Bảo mật tương đối cao nhưng việc luân chuyển giấy tờ, email, bản in vẫn có nguy cơ thất lạc.</td>
+                  </tr>
+                  <tr>
+                    <td class="criteria">Chi phí & tốc độ</td>
+                    <td class="highlight-col">Chi phí thấp, dự kiến 19.000-29.000đ/lần với hợp đồng thuê nhà; có kết quả trong 10-20 giây ở MVP.</td>
+                    <td>Có thể phải mua gói trả phí để xử lý file lớn; vẫn mất thời gian thử nhiều prompt.</td>
+                    <td>Chi phí từ hàng triệu đến hàng chục triệu đồng; mất vài giờ đến vài ngày để có báo cáo.</td>
+                  </tr>
+                  <tr>
+                    <td class="criteria">Giá trị khác biệt</td>
+                    <td class="highlight-col">Highlight trực tiếp lên hợp đồng + giải thích + gợi ý sửa điều khoản.</td>
+                    <td>Chủ yếu trả lời dạng text, khó chứng minh vị trí điều khoản trên bản gốc.</td>
+                    <td>Báo cáo thủ công, phù hợp giao dịch lớn nhưng khó phổ cập cho mọi người dân.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Scrollytelling Section 3: Stats Counter -->
+        <!-- Pricing Section -->
+        <section class="intro-pricing-section" id="pricingSection">
+          <div class="pricing-bg-anim">
+            <div class="glowing-orb orb-1"></div>
+            <div class="glowing-orb orb-2"></div>
+            <div class="glowing-orb orb-3"></div>
+          </div>
+          <div class="pricing-container">
+            <p class="steps-eyebrow" style="text-align: center;">Minh bạch, rõ ràng</p>
+            <h2 class="pricing-main-title scrolly-reveal">Các gói dịch vụ</h2>
+            <div class="pricing-grid">
+              <div class="pricing-card scrolly-reveal">
+                <div class="pricing-header">
+                  <h3>Free Scan</h3>
+                  <div class="price">0đ</div>
+                  <p class="target-user">Người dùng mới</p>
+                </div>
+                <ul class="pricing-features">
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Phân tích mức độ rủi ro</li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Báo cáo Đỏ-Vàng-Xanh</li>
+                </ul>
+              </div>
+              <div class="pricing-card scrolly-reveal">
+                <div class="pricing-header">
+                  <h3>Thuê nhà/lao động</h3>
+                  <div class="price">19.000đ<span>/lần</span></div>
+                  <p class="target-user">Sinh viên, người mới đi làm</p>
+                </div>
+                <ul class="pricing-features">
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Mọi tính năng của Free Scan</li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Gợi ý câu đàm phán</li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Hỏi đáp pháp lý AI</li>
+                </ul>
+              </div>
+              <div class="pricing-card scrolly-reveal recommended">
+                <div class="pricing-badge">Phổ biến nhất</div>
+                <div class="pricing-header">
+                  <h3>Bảo hiểm/vay vốn</h3>
+                  <div class="price">19-29k<span>/lần</span></div>
+                  <p class="target-user">Người lớn tuổi, HĐ giá trị lớn</p>
+                </div>
+                <ul class="pricing-features">
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Rà soát điều khoản phức tạp</li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Xuất PDF chuyên nghiệp</li>
+                </ul>
+              </div>
+              <div class="pricing-card scrolly-reveal">
+                <div class="pricing-header">
+                  <h3>B2B Dashboard</h3>
+                  <div class="price">Linh hoạt</div>
+                  <p class="target-user">Doanh nghiệp, phòng pháp chế</p>
+                </div>
+                <ul class="pricing-features">
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Tùy chỉnh theo số lượng</li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Tích hợp API/Webhooks</li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Quản lý nhóm & phân quyền</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Scrollytelling Section 4: 3 Steps Interactive -->
+        <section class="intro-steps-scrolly" id="stepsScrolly">
+          <div class="scrolly-sticky-container steps-container">
+            <div class="steps-scrolly-content">
+              <div class="steps-scrolly-left">
+                <p class="steps-eyebrow">Trải nghiệm tương tác</p>
+                <h2 class="steps-main-title">Quy trình rà soát thông minh</h2>
+                
+                <div class="step-desc-list">
+                  <div class="step-desc-item" data-step="0">
+                    <span class="step-num">01</span>
+                    <h3>Bảo mật thông tin (PII Redaction)</h3>
+                    <p>Hệ thống tự động phát hiện và làm mờ các dữ liệu nhạy cảm (tên, số điện thoại, CMND/CCCD, địa chỉ) ngay trên trình duyệt trước khi gửi phân tích, bảo đảm tính riêng tư tuyệt đối.</p>
+                  </div>
+                  <div class="step-desc-item" data-step="1">
+                    <span class="step-num">02</span>
+                    <h3>Phân tích chuyên sâu (RAG &amp; Rules)</h3>
+                    <p>AI kết hợp mô hình ngôn ngữ lớn và Cơ sở dữ liệu Luật Việt Nam để đối chiếu từng điều khoản, rà soát tính hợp pháp và phát hiện các rủi ro ẩn giấu.</p>
+                  </div>
+                  <div class="step-desc-item" data-step="2">
+                    <span class="step-num">03</span>
+                    <h3>Trực quan hóa cảnh báo</h3>
+                    <p>Hệ thống bôi màu các đoạn văn theo mức độ rủi ro (Đỏ/Vàng/Xanh) cùng các thẻ hành động đề xuất sửa đổi và câu đàm phán tối ưu nhất.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="steps-scrolly-right">
+                <div class="mock-app-window">
+                  <div class="window-header">
+                    <div class="window-dots">
+                      <span class="dot red"></span>
+                      <span class="dot yellow"></span>
+                      <span class="dot green"></span>
+                    </div>
+                    <div class="window-tab">analysis_preview.html</div>
+                  </div>
+                  
+                  <div class="window-body">
+                    <!-- Step 1: PII Mockup -->
+                    <div class="mock-step-view view-pii" data-step="0">
+                      <div class="mock-doc">
+                        <h4>HỢP ĐỒNG THUÊ NHÀ BÊN TRONG</h4>
+                        <p><strong>Bên A (Cho thuê):</strong> Nguyễn Văn An <span class="mock-blur-box is-blurred">CMND: 0123456789</span>, <span class="mock-blur-box is-blurred">SĐT: 0901234567</span></p>
+                        <p><strong>Bên B (Bên thuê):</strong> Lê Thị Bình <span class="mock-blur-box is-blurred">Địa chỉ: 123 Đường Láng, Hà Nội</span></p>
+                        <p>Bên A đồng ý cho Bên B thuê căn hộ chung cư tại địa chỉ trên để ở với các thỏa thuận sau...</p>
+                      </div>
+                      <div class="mock-status-bubble">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        Tự động làm mờ 3 thông tin cá nhân nhạy cảm
+                      </div>
+                    </div>
+
+                    <!-- Step 2: RAG Mockup -->
+                    <div class="mock-step-view view-rag" data-step="1">
+                      <div class="radar-container">
+                        <div class="radar-circle pulse-1"></div>
+                        <div class="radar-circle pulse-2"></div>
+                        <div class="radar-circle pulse-3"></div>
+                        <div class="radar-sweep"></div>
+                        <div class="radar-center">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="24" height="24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        </div>
+                      </div>
+                      
+                      <div class="radar-connected-db">
+                        <div class="db-node left-node">
+                          <span>Bộ luật Dân sự 2015</span>
+                        </div>
+                        <div class="db-node right-node">
+                          <span>Luật Nhà ở 2023</span>
+                        </div>
+                        <div class="db-node bottom-node">
+                          <span>Thông tư / Nghị định</span>
+                        </div>
+                      </div>
+                      
+                      <div class="mock-scan-log">
+                        <span class="log-line">🔍 Đang đối chiếu Cơ sở dữ liệu Luật Việt Nam...</span>
+                        <span class="log-line success">✓ Đã kiểm tra Điều 328 (Đặt cọc)</span>
+                        <span class="log-line success">✓ Đã kiểm tra Điều 472-482 (Thuê tài sản)</span>
+                      </div>
+                    </div>
+
+                    <!-- Step 3: Visualize Mockup -->
+                    <div class="mock-step-view view-visualize" data-step="2">
+                      <div class="mock-doc-visual">
+                        <h4>HỢP ĐỒNG THUÊ NHÀ</h4>
+                        <p>Bên B đặt cọc cho Bên A số tiền <mark class="risk-highlight yellow">17.000.000 đồng</mark> để đảm bảo...</p>
+                        <p>Nếu Bên B chậm trả tiền nhà từ 3 ngày trở lên sẽ chịu phạt vi phạm hợp đồng bằng <mark class="risk-highlight red">30% tổng tiền thuê</mark>...</p>
+                      </div>
+                      <div class="mock-action-cards">
+                        <div class="mock-action-card red-card">
+                          <div class="card-head">
+                            <span class="badge red">Rủi ro cao (P1)</span>
+                            <strong>Mức phạt vượt trần pháp luật</strong>
+                          </div>
+                          <p>Mức phạt 30% tổng tiền thuê vượt quá mức 8% quy định tại Điều 301 Luật Thương mại.</p>
+                        </div>
+                        <div class="mock-action-card yellow-card">
+                          <div class="card-head">
+                            <span class="badge yellow">Cần đàm phán (P2)</span>
+                            <strong>Chưa rõ thời hạn hoàn cọc</strong>
+                          </div>
+                          <p>Đề xuất bổ sung hạn hoàn cọc trong 5 ngày làm việc từ khi bàn giao nhà.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="intro-cta-section" id="ctaSection">
+          <div class="cta-content scrolly-reveal">
+            <h2>Sẵn sàng bảo vệ quyền lợi của bạn?</h2>
+            <p>Tải lên hợp đồng ngay bây giờ — hoàn toàn miễn phí, không cần đăng ký.</p>
+            <button class="cta-scroll-top-btn" id="ctaScrollTopBtn" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="20" height="20"><path d="M5 12l7-7 7 7"/><path d="M12 19V5"/></svg>
+              Quét hợp đồng ngay
+            </button>
+          </div>
+        </section>
+      </div>
 
       <section class="report-view view is-hidden" id="reportView">
         <section class="report-overview" aria-label="Tổng quan báo cáo">
@@ -354,6 +722,24 @@
         <button class="primary-btn" id="chatSendBtn" type="submit" disabled>Hỏi</button>
       </form>
     </section>
+
+    <!-- App Footer -->
+    <footer class="app-footer">
+      <div class="footer-content">
+        <p><strong>Dự án:</strong> ContractGuard AI</p>
+        <p><strong>Cuộc thi:</strong> THE NEXTX 2026</p>
+        <p><strong>Team:</strong> factcheckAI</p>
+        <div class="team-members">
+          <strong>Thành viên:</strong>
+          <ul>
+            <li>Huỳnh Quốc Huy</li>
+            <li>Lê Minh Tuấn</li>
+            <li>Nguyễn Như Uyên Minh</li>
+            <li>Lê Thị Thanh Lâm</li>
+          </ul>
+        </div>
+      </div>
+    </footer>
 
     <script src="/app.js"></script>
   </body>
