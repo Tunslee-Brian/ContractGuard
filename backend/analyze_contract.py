@@ -1588,6 +1588,11 @@ Yêu cầu cụ thể:
      + "deposit": Số tiền đặt cọc (nếu có).
      + "possiblePenalty": Số tiền phạt vi phạm ước tính tối đa (ví dụ bằng 1 tháng thuê hoặc % phạt).
      + "estimatedExposure": Tổng rủi ro tài chính ước tính (thường bằng tiền cọc + tiền phạt hoặc giá trị thuê/vay/bảo hiểm chịu rủi ro).
+     + "depositQuote": Trích dẫn NGUYÊN VĂN câu hợp đồng quy định tiền cọc (copy chính xác từng ký tự từ hợp đồng, hoặc null nếu không có).
+     + "penaltyQuote": Trích dẫn NGUYÊN VĂN câu hợp đồng quy định mức phạt vi phạm (hoặc null nếu không có).
+     + "depositReason": Giải thích ngắn gọn cách AI tính ra con số tiền cọc (ví dụ: "2 tháng tiền thuê × 8.500.000 = 17.000.000 đồng", hoặc null).
+     + "penaltyReason": Giải thích ngắn gọn cách AI tính ra phạt dự kiến (hoặc null).
+     + "exposureReason": Giải thích ngắn gọn cách AI tính tổng rủi ro tài chính (hoặc null).
    - "timeline": 1-5 mốc thời gian/nghĩa vụ quan trọng trong hợp đồng. Mỗi mốc gồm: "label" (nhãn), "value" (nội dung thời điểm), "risk" (lời khuyên rủi ro ngắn gọn).
    - "missingClauses": 1-5 điều khoản quan trọng bị thiếu trong hợp đồng mà người ký nên yêu cầu bổ sung để tự bảo vệ mình. Mỗi điều khoản gồm: "title" (tên điều khoản), "advice" (lời khuyên ngắn).
    - "priorityActions": 1-4 hành động khẩn cấp ưu tiên sửa (mức độ RED hoặc YELLOW). Mỗi hành động gồm: "title" (tên hành động), "severity" ("RED" hoặc "YELLOW"), "why" (lý do tại sao khẩn cấp), "action" (đề xuất hành động sửa cụ thể).
@@ -1625,7 +1630,12 @@ Hãy trả về kết quả dưới dạng JSON duy nhất, khớp chính xác v
       "monthlyRent": 25000000,
       "deposit": 50000000,
       "possiblePenalty": 25000000,
-      "estimatedExposure": 75000000
+      "estimatedExposure": 75000000,
+      "depositQuote": "Bên B đặt cọc cho Bên A số tiền 50.000.000 đồng để bảo đảm thực hiện hợp đồng.",
+      "penaltyQuote": "Bên vi phạm phải bồi thường cho bên bị vi phạm bằng 01 tháng tiền thuê nhà.",
+      "depositReason": "Hợp đồng ghi rõ số tiền cọc là 50.000.000 đồng tại Điều 3.",
+      "penaltyReason": "Mức phạt vi phạm bằng 01 tháng tiền thuê = 25.000.000 đồng theo Điều 7.",
+      "exposureReason": "Tổng rủi ro = tiền cọc (50tr) + phạt tối đa (25tr) = 75.000.000 đồng."
     }},
     "timeline": [
       {{
@@ -1799,6 +1809,10 @@ def analyze_contract(text: str, filename: str, contract_type: str) -> dict[str, 
                 display[key] = format_vnd(int(val))
             else:
                 display[key] = "Chưa xác định"
+        # Preserve AI explanation fields (pass-through, no transformation needed)
+        for reason_key in ["depositQuote", "penaltyQuote", "depositReason", "penaltyReason", "exposureReason"]:
+            if reason_key not in exposure:
+                exposure[reason_key] = None
 
         if not isinstance(deep.get("timeline"), list):
             deep["timeline"] = []

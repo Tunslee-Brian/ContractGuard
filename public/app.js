@@ -8,6 +8,7 @@ const state = {
   contractType: "Hợp đồng thuê nhà",
   pendingFile: null,
   loadingTimer: null,
+  successTimer: null,
   activeView: "intro",
   chatMessages: [],
   chatHistory: [],
@@ -73,7 +74,36 @@ const selectors = {
   toast: document.querySelector("#toast"),
 };
 
+const STATUSES = {
+  idle: { text: "Sẵn sàng quét hợp đồng", icon: "📄", className: "status-idle" },
+  scanning: { text: "đang quét hợp đồng", icon: "🔍", className: "status-scanning" },
+  redacting: { text: "đang che thông tin cá nhân, thông tin nhạy cảm", icon: "🛡️", className: "status-redacting" },
+  analyzing: { text: "AI đang phân tích", icon: "🧠", className: "status-analyzing" },
+  success: { text: "AI phân tích thành công", icon: "✅", className: "status-success" },
+  completed: { text: "Hoàn tất báo cáo", icon: "📊", className: "status-completed" },
+  error: { text: "Lỗi phân tích hợp đồng", icon: "❌", className: "status-error" }
+};
+
+function setPipelineStatus(statusKey) {
+  const status = STATUSES[statusKey];
+  if (!status) return;
+
+  const pipeline = selectors.pipeline;
+  if (!pipeline) return;
+
+  // Clear previous status classes
+  Object.values(STATUSES).forEach(s => pipeline.classList.remove(s.className));
+  pipeline.classList.add(status.className);
+
+  const iconEl = pipeline.querySelector(".status-icon");
+  const textEl = pipeline.querySelector("#pipelineStatusText");
+
+  if (iconEl) iconEl.textContent = status.icon;
+  if (textEl) textEl.textContent = status.text;
+}
+
 function showIntro() {
+  setPipelineStatus("idle");
   state.activeView = "intro";
   document.body.classList.add("intro-mode");
   selectors.introView.classList.remove("is-hidden");
@@ -232,16 +262,42 @@ function setLoading(isLoading) {
   selectors.scanBtn.textContent = isLoading ? "Đang quét" : "Quét rủi ro";
   selectors.heroScanBtn.textContent = isLoading ? "Đang quét" : "Quét rủi ro";
 
-  const steps = [...selectors.pipeline.querySelectorAll(".pipeline-step")];
   window.clearInterval(state.loadingTimer);
-  steps.forEach((step, index) => step.classList.toggle("is-active", index === 0));
+  window.clearTimeout(state.successTimer);
 
-  if (!isLoading) return;
-  let active = 0;
-  state.loadingTimer = window.setInterval(() => {
-    active = (active + 1) % steps.length;
-    steps.forEach((step, index) => step.classList.toggle("is-active", index <= active));
-  }, 430);
+  if (isLoading) {
+    let currentStep = 0;
+    setPipelineStatus("scanning");
+    state.loadingTimer = window.setInterval(() => {
+      currentStep++;
+      if (currentStep === 1) {
+        setPipelineStatus("redacting");
+      } else if (currentStep === 2) {
+        setPipelineStatus("analyzing");
+        window.clearInterval(state.loadingTimer);
+      }
+    }, 2500);
+  } else {
+    const pipeline = selectors.pipeline;
+    const isScanning = pipeline && (
+      pipeline.classList.contains("status-scanning") ||
+      pipeline.classList.contains("status-redacting") ||
+      pipeline.classList.contains("status-analyzing")
+    );
+
+    if (isScanning) {
+      if (state.analysis) {
+        setPipelineStatus("success");
+        state.successTimer = window.setTimeout(() => {
+          setPipelineStatus("completed");
+        }, 1500);
+      } else {
+        setPipelineStatus("error");
+      }
+    } else {
+      setPipelineStatus(state.analysis ? "completed" : "idle");
+    }
+  }
 }
 
 async function readJson(response) {
@@ -374,92 +430,179 @@ function renderScoringFramework(framework) {
   `;
 }
 
+function findFallbackForMetric(keywords) {
+  const findings = sortedFindings();
+  for (const f of findings) {
+    const text = [f.muc_ra_soat, f.giai_thich_binh_dan, f.van_ban_goc_highlight].join(" ").toLowerCase();
+    if (keywords.some((kw) => text.includes(kw))) {
+      return {
+        quote: f.van_ban_goc_highlight || null,
+        reason: f.giai_thich_binh_dan || null,
+        findingId: f.id || null,
+      };
+    }
+  }
+  return { quote: null, reason: null, findingId: null };
+}
+
+function buildMetricPopover(opts) {
+  const { cardId, quote, reason, chatPrompt, jumpQuote, findingId } = opts;
+  const quoteHtml = quote
+    ? `<blockquote class="metric-quote"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 2v6c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .75-1 1.5V19c0 1.25.75 2 2 2zm9-3c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 2v6c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .75-1 1.5V19c0 1.25.75 2 2 2z"/></svg>${escapeHtml(quote)}</blockquote>`
+    : `<p class="metric-quote-empty">AI không tìm thấy điều khoản liên quan trong văn bản hợp đồng — con số được ước tính từ ngữ cảnh tổng thể.</p>`;
+  const reasonHtml = reason
+    ? `<p class="metric-reason"><strong>Căn cứ AI:</strong> ${escapeHtml(reason)}</p>`
+    : "";
+  const jumpBtn = (jumpQuote || findingId)
+    ? `<button class="metric-popover-jump mini-btn" type="button" ${jumpQuote ? `data-metric-jump="${escapeHtml(jumpQuote)}"` : ""} ${findingId ? `data-metric-finding="${escapeHtml(findingId)}"` : ""}>Tới đoạn gốc ↗</button>`
+    : `<button class="metric-popover-jump mini-btn" type="button" disabled title="Không tìm thấy đoạn hợp đồng tương ứng">Tới đoạn gốc ↗</button>`;
+  return `
+    <div class="metric-popover" id="${cardId}-popover" role="tooltip" aria-live="polite" hidden>
+      <div class="metric-popover-inner">
+        <div class="metric-popover-body">
+          ${quoteHtml}
+          ${reasonHtml}
+        </div>
+        <div class="metric-popover-actions">
+          ${jumpBtn}
+          <button class="mini-btn ask-finding-btn" type="button" data-chat-prompt="${escapeHtml(chatPrompt)}">Hỏi thêm →</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function firstMatch(text, patterns, fallback = "Chưa xác định") {
+  for (const pattern of patterns) {
+    const match = pattern.exec(text);
+    if (match?.[1]) return compact(match[1]);
+  }
+  return fallback;
+}
+
+function timelineValue(timeline, keywords, fallback = "Chưa xác định") {
+  const item = timeline.find((entry) => {
+    const label = normalizeSearchText(entry.label || "");
+    return keywords.some((keyword) => label.includes(keyword));
+  });
+  return item?.value || fallback;
+}
+
+function extractContractSummary(analysis) {
+  const text = analysis.text || "";
+  const compactText = compact(text);
+  const timeline = analysis.deepAnalysis?.timeline || [];
+  const exposure = analysis.deepAnalysis?.financialExposure?.display || {};
+  const counts = analysis.summary?.counts || { RED: 0, YELLOW: 0, GREEN: 0 };
+  const score = analysis.summary?.riskScore || "--";
+  const readiness = analysis.deepAnalysis?.readiness;
+  const title = firstMatch(text, [/^\s*(HỢP ĐỒNG[^\n]+)/im], analysis.fileName || "Hợp đồng");
+  const lessor = firstMatch(text, [/I\.\s*BÊN CHO THUÊ[\s\S]{0,420}?Họ và tên:\s*([^\n]+)/i, /(?:^|\n)\s*(?:- )?Bên cho thuê\s*:\s*([^\n]+)/i]);
+  const tenant = firstMatch(text, [/II\.\s*BÊN THUÊ[\s\S]{0,420}?Họ và tên:\s*([^\n]+)/i, /(?:^|\n)\s*(?:- )?Bên thuê\s*:\s*([^\n]+)/i]);
+  const propertyType = firstMatch(text, [/Loại nhà ở:\s*([^\n]+)/i], "Nhà ở / tài sản thuê");
+  const propertyAddress = firstMatch(text, [/Vị trí, địa điểm nhà ở:\s*([^\n]+)/i, /Địa chỉ nhà[^:]*:\s*([^\n]+)/i]);
+  const rent = firstMatch(text, [/Giá thuê[^.\n]*?là\s*([0-9.,]+\s*đồng\/tháng)/i, /tiền thuê[^.\n]*?([0-9.,]+\s*đồng\/tháng)/i], "Chưa xác định");
+  const deposit = exposure.deposit || firstMatch(text, [/đặt cọc\s*([0-9.,]+\s*đồng)/i], "Chưa xác định");
+  const term = timelineValue(timeline, ["thoi han thue"], firstMatch(text, [/Thời hạn thuê[^.\n]*?là\s*([^.\n]+)/i], "Chưa xác định"));
+  const paymentDue = timelineValue(timeline, ["han tra tien", "thanh toan"], firstMatch(text, [/thanh toán chậm nhất vào\s*([^.\n]+)/i], "Chưa xác định"));
+  const handover = timelineValue(timeline, ["giao", "ban giao"], firstMatch(text, [/Thời điểm giao nhận nhà:\s*([^\n.]+)/i], "Chưa xác định"));
+  const purpose = firstMatch(text, [/Công năng sử dụng:\s*([^\n]+)/i, /mục đích thuê[^:]*:\s*([^\n]+)/i], "Chưa xác định");
+  const placeAndDate = firstMatch(text, [/(Thành phố[^\n]+ngày[^\n]+)/i, /(Hà Nội[^\n]+ngày[^\n]+)/i, /(TP\.?[^\n]+ngày[^\n]+)/i], "");
+  const topRisks = sortedFindings()
+    .filter((finding) => finding.muc_do_rui_ro !== "GREEN")
+    .slice(0, 4)
+    .map((finding) => ({
+      label: finding.muc_ra_soat,
+      severity: finding.muc_do_rui_ro,
+    }));
+
+  return {
+    title,
+    placeAndDate,
+    brief: `Hợp đồng ghi nhận giao dịch ${normalizeSearchText(title).includes("thue") ? "thuê nhà ở" : "dân sự/thương mại"} giữa ${lessor} và ${tenant}${propertyAddress !== "Chưa xác định" ? ` đối với tài sản tại ${propertyAddress}` : ""}.`,
+    riskSummary: {
+      label: riskLabel(analysis.summary?.overallRisk),
+      score,
+      counts,
+      readinessLabel: readiness?.label || "",
+      reason: readiness?.reason || `Có ${counts.RED} rủi ro Đỏ, ${counts.YELLOW} rủi ro Vàng và ${counts.GREEN} điểm Xanh trong báo cáo.`,
+      action: counts.RED
+        ? "Ưu tiên xử lý các điểm Đỏ trước khi ký, sau đó rà soát các điểm Vàng liên quan đến nghĩa vụ tiền và quyền chấm dứt."
+        : counts.YELLOW
+          ? "Nên đàm phán rõ các điểm Vàng trước khi ký để giảm tranh chấp khi thực hiện hợp đồng."
+          : "Chưa phát hiện rủi ro nghiêm trọng trong bộ rule hiện tại, nhưng vẫn nên rà soát thủ công trước khi ký.",
+    },
+    items: [
+      { label: "Bên cho thuê", value: lessor },
+      { label: "Bên thuê", value: tenant },
+      { label: "Tài sản thuê", value: propertyAddress !== "Chưa xác định" ? propertyAddress : propertyType },
+      { label: "Mục đích sử dụng", value: purpose },
+      { label: "Thời hạn", value: term },
+      { label: "Bàn giao", value: handover },
+      { label: "Giá thuê", value: rent },
+      { label: "Tiền cọc", value: deposit },
+      { label: "Hạn thanh toán", value: paymentDue },
+    ],
+    topRisks,
+    compactText,
+  };
+}
+
 function renderDeepInsights() {
   const deep = state.analysis?.deepAnalysis;
   if (!deep) return;
 
-  const exposure = deep.financialExposure?.display || {};
-  const timeline = deep.timeline || [];
-  const missing = deep.missingClauses || [];
-  const priorities = deep.priorityActions || [];
+  const contractSummary = extractContractSummary(state.analysis);
 
   selectors.deepInsights.innerHTML = `
     <div class="insight-head">
       <div>
-        <p class="eyebrow">Deep scan</p>
-        <h2>${escapeHtml(deep.readiness.label)}</h2>
+        <p class="eyebrow">Tóm tắt hợp đồng</p>
+        <h2>${escapeHtml(contractSummary.title)}</h2>
       </div>
       <div class="insight-actions">
-        <span class="readiness-chip">${escapeHtml(String(deep.readiness.score))}/100</span>
-        <button class="ask-context-btn" type="button" data-chat-prompt="Giải thích deep scan, mức sẵn sàng ký và các ưu tiên sửa quan trọng nhất">
+        <span class="readiness-chip">${escapeHtml(String(state.analysis.summary?.riskScore || "--"))}/100</span>
+        <button class="ask-context-btn" type="button" data-chat-prompt="Tóm tắt hợp đồng này theo các bên, tài sản, thời hạn, tiền thuê, tiền cọc và các rủi ro nổi bật">
           Hỏi thêm
         </button>
       </div>
     </div>
-    <p class="insight-reason">${escapeHtml(deep.readiness.reason)}</p>
-    <div class="insight-metrics">
-      <div class="metric-card" style="position: relative;">
-        <span>Tiền cọc</span>
-        <strong>${escapeHtml(exposure.deposit || "Chưa xác định")}</strong>
-        <button class="mini-chat-shortcut-btn" type="button" style="position: absolute; right: 8px; top: 8px;" data-chat-prompt="Phân tích chi tiết điều khoản tiền cọc và rủi ro đặt cọc trong hợp đồng" title="Hỏi thêm về tiền cọc">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="12" height="12"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-        </button>
-      </div>
-      <div class="metric-card" style="position: relative;">
-        <span>Phạt dự kiến</span>
-        <strong>${escapeHtml(exposure.possiblePenalty || "Chưa xác định")}</strong>
-        <button class="mini-chat-shortcut-btn" type="button" style="position: absolute; right: 8px; top: 8px;" data-chat-prompt="Phân tích điều khoản phạt vi phạm hợp đồng và bồi thường thiệt hại" title="Hỏi về phạt vi phạm">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="12" height="12"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-        </button>
-      </div>
-      <div class="metric-card metric-card-wide" style="position: relative;">
-        <span>Ước tính đang chịu rủi ro</span>
-        <strong>${escapeHtml(exposure.estimatedExposure || "Chưa xác định")}</strong>
-        <button class="mini-chat-shortcut-btn" type="button" style="position: absolute; right: 8px; top: 8px;" data-chat-prompt="Tại sao tổng rủi ro tài chính của hợp đồng ước tính là ${escapeHtml(exposure.estimatedExposure || 'Chưa xác định')}? Giải thích cụ thể các rủi ro tài chính này." title="Phân tích rủi ro tài chính">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="12" height="12"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-        </button>
-      </div>
-    </div>
-    ${renderScoringFramework(deep.scoringFramework)}
-    <div class="deep-columns">
-      <div class="deep-block">
-        <h3>Timeline nghĩa vụ</h3>
-        ${timeline.length ? timeline.map((item) => `
-          <div class="timeline-row">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
-              <div>
-                <span>${escapeHtml(item.label)}</span>
-                <strong>${escapeHtml(item.value)}</strong>
-              </div>
-              <button class="mini-chat-shortcut-btn" type="button" data-chat-prompt="Giải thích nghĩa vụ '${escapeHtml(item.label)}' đáo hạn vào '${escapeHtml(item.value)}' và mức độ rủi ro: '${escapeHtml(item.risk)}'" title="Hỏi thêm về nghĩa vụ này">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="12" height="12"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-              </button>
-            </div>
-            <small style="margin-top: 4px; display: block;">${escapeHtml(item.risk)}</small>
-          </div>
-        `).join("") : `<p class="muted-line">Chưa trích xuất được mốc thời gian quan trọng.</p>`}
-      </div>
-      <div class="deep-block">
-        <h3>Điều khoản nên bổ sung</h3>
-        ${missing.length ? missing.map((item) => `
-          <div class="missing-row" style="position: relative; padding-right: 32px;">
-            <strong>${escapeHtml(item.title)}</strong>
-            <span>${escapeHtml(item.advice)}</span>
-            <button class="mini-chat-shortcut-btn" type="button" style="position: absolute; right: 6px; top: 10px;" data-chat-prompt="Hợp đồng bị thiếu điều khoản '${escapeHtml(item.title)}'. Hãy giải thích tại sao cần bổ sung điều khoản này và soạn thảo một mẫu câu sửa chuẩn để đưa vào hợp đồng." title="Hỏi mẫu soạn thảo điều khoản bổ sung">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="12" height="12"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-            </button>
-          </div>
-        `).join("") : `<p class="muted-line">Chưa thấy khoảng trống lớn trong bộ rule hiện tại.</p>`}
-      </div>
-    </div>
-    <div class="priority-strip">
-      ${priorities.map((item, index) => `
-        <button class="priority-action ${item.severity}" type="button" data-priority-index="${index}">
-          <span>${escapeHtml(severity[item.severity].label)}</span>
-          <strong>${escapeHtml(item.title)}</strong>
-        </button>
+    <p class="insight-reason">${escapeHtml(contractSummary.brief)}</p>
+    <div class="contract-summary-grid">
+      ${contractSummary.items.map((item) => `
+        <div class="contract-summary-card">
+          <span>${escapeHtml(item.label)}</span>
+          <strong>${escapeHtml(item.value)}</strong>
+        </div>
       `).join("")}
     </div>
+    <section class="contract-risk-summary" aria-label="Tóm tắt rủi ro">
+      <div class="contract-risk-summary-head">
+        <div>
+          <span>Tóm tắt rủi ro</span>
+          <strong>${escapeHtml(contractSummary.riskSummary.label)}</strong>
+        </div>
+        <b>${escapeHtml(String(contractSummary.riskSummary.score))}/100</b>
+      </div>
+      <div class="risk-count-row" aria-label="Số lượng rủi ro theo mức độ">
+        <span class="risk-count RED">Đỏ <strong>${escapeHtml(String(contractSummary.riskSummary.counts.RED || 0))}</strong></span>
+        <span class="risk-count YELLOW">Vàng <strong>${escapeHtml(String(contractSummary.riskSummary.counts.YELLOW || 0))}</strong></span>
+        <span class="risk-count GREEN">Xanh <strong>${escapeHtml(String(contractSummary.riskSummary.counts.GREEN || 0))}</strong></span>
+      </div>
+      <p>${escapeHtml(contractSummary.riskSummary.reason)}</p>
+      <small>${escapeHtml(contractSummary.riskSummary.action)}</small>
+    </section>
+    ${contractSummary.topRisks.length ? `
+      <div class="summary-risk-strip">
+        <span>Rủi ro nổi bật</span>
+        <div>
+          ${contractSummary.topRisks.map((risk) => `
+            <button class="summary-risk-chip ${risk.severity}" type="button" data-chat-prompt="Giải thích rủi ro '${escapeHtml(risk.label)}' trong bối cảnh tóm tắt hợp đồng này">
+              ${escapeHtml(risk.label)}
+            </button>
+          `).join("")}
+        </div>
+      </div>
+    ` : ""}
   `;
 }
 
@@ -1284,6 +1427,7 @@ function render() {
 }
 
 function setPendingFile(file) {
+  setPipelineStatus("idle");
   state.pendingFile = file || null;
   selectors.scanBtn.disabled = !file;
   selectors.heroScanBtn.disabled = !file;
@@ -1460,10 +1604,95 @@ function bindEvents() {
 
   selectors.deepInsights.addEventListener("click", (event) => {
     const action = event.target.closest(".priority-action");
-    if (!action || !state.analysis?.deepAnalysis?.priorityActions) return;
-    const item = state.analysis.deepAnalysis.priorityActions[Number(action.dataset.priorityIndex)];
-    const finding = sortedFindings().find((candidate) => candidate.muc_ra_soat === item.title);
-    if (finding?.id) scrollToFinding(finding.id);
+    const seeMoreBtn = event.target.closest(".metric-see-more-btn");
+    const jumpBtn = event.target.closest(".metric-popover-jump");
+
+    if (seeMoreBtn) {
+      const targetId = seeMoreBtn.dataset.popoverTarget;
+      const popover = selectors.deepInsights.querySelector(`#${CSS.escape(targetId)}`);
+      if (!popover) return;
+      const isOpen = !popover.hidden;
+      // Close all metric popovers first
+      selectors.deepInsights.querySelectorAll(".metric-popover").forEach((p) => {
+        p.hidden = true;
+        p.classList.remove("is-open");
+      });
+      selectors.deepInsights.querySelectorAll(".metric-see-more-btn").forEach((b) => {
+        b.setAttribute("aria-expanded", "false");
+        b.classList.remove("is-active");
+      });
+      // Toggle the clicked one
+      if (!isOpen) {
+        popover.hidden = false;
+        requestAnimationFrame(() => popover.classList.add("is-open"));
+        seeMoreBtn.setAttribute("aria-expanded", "true");
+        seeMoreBtn.classList.add("is-active");
+      }
+      return;
+    }
+
+    if (jumpBtn) {
+      const quoteText = jumpBtn.dataset.metricJump;
+      const findingId = jumpBtn.dataset.metricFinding;
+
+      // Switch to viewer tab first
+      const viewerTab = document.querySelector(".tab-btn[data-tab=\"viewer\"]");
+
+      if (quoteText) {
+        // Find the paragraph in the document viewer that contains this quote
+        const viewer = selectors.documentViewer;
+        const paragraphs = viewer ? viewer.querySelectorAll(".doc-paragraph") : [];
+        let found = null;
+        const normalizedQuote = quoteText.trim().slice(0, 60); // match first 60 chars
+        for (const para of paragraphs) {
+          if (para.textContent.includes(normalizedQuote)) {
+            found = para;
+            break;
+          }
+        }
+        if (found) {
+          if (viewerTab) viewerTab.click();
+          setTimeout(() => {
+            found.scrollIntoView({ behavior: "smooth", block: "center" });
+            found.classList.add("metric-highlight-flash");
+            setTimeout(() => found.classList.remove("metric-highlight-flash"), 1800);
+          }, 150);
+          showToast("Đã chuyển đến đoạn hợp đồng liên quan");
+          return;
+        }
+      }
+
+      // Fallback: scroll to the finding card
+      if (findingId) {
+        if (viewerTab) viewerTab.click();
+        setTimeout(() => scrollToFinding(findingId), 150);
+        showToast("Đã chuyển đến điều khoản liên quan");
+        return;
+      }
+
+      showToast("Không tìm thấy đoạn hợp đồng tương ứng");
+      return;
+    }
+
+
+    if (action && state.analysis?.deepAnalysis?.priorityActions) {
+      const item = state.analysis.deepAnalysis.priorityActions[Number(action.dataset.priorityIndex)];
+      const finding = sortedFindings().find((candidate) => candidate.muc_ra_soat === item.title);
+      if (finding?.id) scrollToFinding(finding.id);
+      return;
+    }
+
+    // Close popovers when clicking elsewhere in deepInsights
+    if (!event.target.closest(".metric-popover")) {
+      selectors.deepInsights.querySelectorAll(".metric-popover").forEach((p) => {
+        p.hidden = true;
+        p.classList.remove("is-open");
+      });
+      selectors.deepInsights.querySelectorAll(".metric-see-more-btn").forEach((b) => {
+        b.setAttribute("aria-expanded", "false");
+        b.classList.remove("is-active");
+      });
+    }
   });
 
   selectors.documentViewer.addEventListener("click", (event) => {
