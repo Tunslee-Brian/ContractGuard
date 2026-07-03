@@ -556,6 +556,6 @@ const server = http.createServer((req, res) => {
   send(res, 405, "Method not allowed", { "Content-Type": "text/plain; charset=utf-8" });
 });
 
-server.listen(PORT, "127.0.0.1", () => {
-  console.log(`ContractGuard AI running at http://localhost:${PORT}`);
+server.listen(PORT, "0.0.0.0", () => {
+  console.log(`ContractGuard AI running on port ${PORT}`);
 });
