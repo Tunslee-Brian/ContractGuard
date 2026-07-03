@@ -1,0 +1,10 @@
+.git
+.gitignore
+.venv
+node_modules
+work/uploads/*
+!work/uploads/.gitkeep
+.env
+.env.local
+*.log
+.DS_Store
