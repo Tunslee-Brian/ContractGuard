@@ -111,7 +111,7 @@ function showIntro() {
   selectors.homeBtn.disabled = true;
   selectors.exportBtn.disabled = true;
   window.scrollTo({ top: 0, behavior: "smooth" });
-  initParticles();
+  // initParticles();
 }
 
 function showReport() {
@@ -122,7 +122,7 @@ function showReport() {
   selectors.homeBtn.disabled = false;
   selectors.exportBtn.disabled = !state.analysis;
   window.scrollTo({ top: 0, behavior: "smooth" });
-  stopParticles();
+  // stopParticles();
 }
 
 function escapeHtml(value) {
@@ -1467,6 +1467,19 @@ function scrollToFinding(id) {
 
 function bindEvents() {
   selectors.homeBtn.addEventListener("click", showIntro);
+  
+  const heroTryBtn = document.querySelector("#heroTryBtn");
+  if (heroTryBtn) {
+    heroTryBtn.addEventListener("click", () => {
+      document.querySelector("#uploadSection")?.scrollIntoView({ behavior: "smooth" });
+    });
+  }
+  const navCtaBtn = document.querySelector("#navCtaBtn");
+  if (navCtaBtn) {
+    navCtaBtn.addEventListener("click", () => {
+      document.querySelector("#uploadSection")?.scrollIntoView({ behavior: "smooth" });
+    });
+  }
   selectors.heroFileInput.addEventListener("change", (event) => {
     setPendingFile(event.target.files[0]);
   });
@@ -1839,66 +1852,9 @@ function bindDropzone(dropzone) {
   });
 }
 
-// Ambient particles animation loop for world-class landing page
-function initParticles() {
-  pCanvas = document.getElementById("ambientParticles");
-  if (!pCanvas) return;
-  pCtx = pCanvas.getContext("2d");
-  
-  const resizeCanvas = () => {
-    if (pCanvas) {
-      pCanvas.width = pCanvas.parentElement.offsetWidth;
-      pCanvas.height = pCanvas.parentElement.offsetHeight;
-    }
-  };
-  
-  resizeCanvas();
-  window.addEventListener("resize", resizeCanvas);
-  
-  pParticles = [];
-  for (let i = 0; i < 40; i++) {
-    pParticles.push({
-      x: Math.random() * pCanvas.width,
-      y: Math.random() * pCanvas.height,
-      radius: Math.random() * 2 + 1,
-      speedY: -(Math.random() * 0.4 + 0.15),
-      speedX: (Math.random() * 0.4 - 0.2),
-      alpha: Math.random() * 0.5 + 0.15,
-      color: Math.random() > 0.4 ? "200, 155, 39" : "139, 28, 28" // Gold or Red
-    });
-  }
-  
-  const runParticleLoop = () => {
-    if (!pCanvas || state.activeView !== "intro") return;
-    pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
-    
-    pParticles.forEach(p => {
-      p.y += p.speedY;
-      p.x += p.speedX;
-      if (p.y < 0) {
-        p.y = pCanvas.height;
-        p.x = Math.random() * pCanvas.width;
-      }
-      if (p.x < 0 || p.x > pCanvas.width) {
-        p.x = Math.random() * pCanvas.width;
-      }
-      pCtx.beginPath();
-      pCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-      pCtx.fillStyle = `rgba(${p.color}, ${p.alpha})`;
-      pCtx.fill();
-    });
-    
-    pAnimFrameId = requestAnimationFrame(runParticleLoop);
-  };
-  
-  runParticleLoop();
-}
-
-function stopParticles() {
-  if (pAnimFrameId) {
-    cancelAnimationFrame(pAnimFrameId);
-  }
-}
+// Particles logic removed to avoid AI slop
+function initParticles() {}
+function stopParticles() {}
 
 bindEvents();
 showIntro();
@@ -1946,5 +1902,247 @@ document.addEventListener("DOMContentLoaded", () => {
         fly.style.transform = `translate(${xOffset}px, ${-yOffset}px)`;
       });
     });
+  }
+});
+
+// === Fountain Pen Mouse Follow & Physics Logic ===
+document.addEventListener("DOMContentLoaded", () => {
+  let penIsHovered = false;
+  let hasInitialized = false;
+  let hasLoadedDelayPassed = false;
+  let currentUnderlineOffset = 400;
+
+  setTimeout(() => {
+    hasLoadedDelayPassed = true;
+  }, 800); // Wait 800ms to trigger elegant automatic draw after load
+
+  // Physics state variables
+  let tipX = 0;
+  let tipY = 0;
+  let prevTipX = 0;
+  let prevTipY = 0;
+  
+  let targetTipX = 0;
+  let targetTipY = 0;
+  
+  let tailX = 0;
+  let tailY = 0;
+
+  let restAngle = 30; // default resting angle (degrees)
+  const penLength = 200; // simulated physical length from nib tip to tail
+
+  let currentRadius = 0;
+  let targetRadius = 0;
+
+  // Elastic damping & gravity pull state variables
+  let mouseInfluence = 0;
+  let isMouseInHero = false;
+  let targetMouseX = 0;
+  let targetMouseY = 0;
+  let isInsideContract = false;
+
+  const penContainer = document.querySelector(".fountain-pen-container");
+  const penWrapper = document.querySelector(".pen-demo-wrapper");
+  const contractPreviewContainer = document.querySelector(".contract-demo-preview-container");
+
+  if (penContainer && penWrapper && contractPreviewContainer) {
+    const introHero = document.querySelector("#introHero");
+
+    const handleMouseMove = (e) => {
+      penIsHovered = true;
+      isMouseInHero = true;
+
+      const rect = penWrapper.getBoundingClientRect();
+      const mX = e.clientX - rect.left;
+      const mY = e.clientY - rect.top;
+
+      targetMouseX = mX;
+      targetMouseY = mY;
+
+      // Check if mouse is inside the contract preview boundaries
+      const previewRect = contractPreviewContainer.getBoundingClientRect();
+      isInsideContract = (
+        e.clientX >= previewRect.left &&
+        e.clientX <= previewRect.right &&
+        e.clientY >= previewRect.top &&
+        e.clientY <= previewRect.bottom
+      );
+
+      if (isInsideContract) {
+        targetRadius = 90;
+        restAngle = 15; // active writing angle
+      } else {
+        targetRadius = 0;
+        restAngle = 30; // back to default resting angle
+      }
+    };
+
+    if (introHero) {
+      introHero.addEventListener("mousemove", handleMouseMove);
+      
+      introHero.addEventListener("mouseenter", () => {
+        penIsHovered = true;
+        isMouseInHero = true;
+      });
+
+      introHero.addEventListener("mouseleave", () => {
+        penIsHovered = false;
+        isMouseInHero = false;
+        targetRadius = 0;
+        restAngle = 30;
+      });
+    }
+
+    // Animation loop with requestAnimationFrame
+    const updatePenPhysics = () => {
+      if (state.activeView !== "intro") {
+        requestAnimationFrame(updatePenPhysics);
+        return;
+      }
+
+      const rect = penWrapper.getBoundingClientRect();
+      const W = rect.width;
+      
+      // Default rest position of the nib tip (relative to wrapper coordinates)
+      const defaultTipX = W - 105;
+      const defaultTipY = 324;
+
+      // Initialize coordinates on the first loop
+      if (!hasInitialized && W > 0) {
+        tipX = defaultTipX;
+        tipY = defaultTipY;
+        targetTipX = defaultTipX;
+        targetTipY = defaultTipY;
+        targetMouseX = defaultTipX;
+        targetMouseY = defaultTipY;
+        prevTipX = tipX;
+        prevTipY = tipY;
+        
+        const rad = (restAngle * Math.PI) / 180;
+        tailX = tipX + penLength * Math.sin(rad);
+        tailY = tipY - penLength * Math.cos(rad);
+        
+        hasInitialized = true;
+      }
+
+      if (hasInitialized) {
+        // Handle elastic pull-back and damping when outside contract
+        if (penIsHovered && isMouseInHero) {
+          if (isInsideContract) {
+            // Inside contract: Full sensitivity (influence climbs to 1)
+            mouseInfluence += (1 - mouseInfluence) * 0.15;
+          } else {
+            // Outside contract: Damping kicks in, influence decays (pen response gets slower)
+            mouseInfluence = Math.max(0, mouseInfluence - 0.015);
+          }
+          
+          // Blend target coordinate between the mouse position and the default resting position
+          targetTipX = targetMouseX * mouseInfluence + defaultTipX * (1 - mouseInfluence);
+          targetTipY = targetMouseY * mouseInfluence + defaultTipY * (1 - mouseInfluence);
+        } else {
+          // Returning to default resting position
+          mouseInfluence = Math.max(0, mouseInfluence - 0.03);
+          targetTipX = defaultTipX;
+          targetTipY = defaultTipY;
+        }
+
+        // LERP for the nib tip (responsiveness decays with mouseInfluence)
+        const tipEase = penIsHovered ? (0.02 + 0.10 * mouseInfluence) : 0.03;
+        tipX += (targetTipX - tipX) * tipEase;
+        tipY += (targetTipY - tipY) * tipEase;
+
+        // Calculate velocity of the tip
+        const vx = tipX - prevTipX;
+        const vy = tipY - prevTipY;
+        prevTipX = tipX;
+        prevTipY = tipY;
+
+        // Ideal rest position of the tail relative to current tip
+        const rad = (restAngle * Math.PI) / 180;
+        const restTailX = tipX + penLength * Math.sin(rad);
+        const restTailY = tipY - penLength * Math.cos(rad);
+
+        // Add physical drag lag to target tail position based on current velocity (X-axis only to prevent vertical compression & over-tilting)
+        const dragFactor = 1.0; 
+        const targetTailX = restTailX - vx * dragFactor;
+        const targetTailY = restTailY;
+
+        // LERP for the tail (slower when returning for a graceful, delayed return feeling)
+        const tailEase = penIsHovered ? 0.04 : 0.02; // Slower return logic for extreme smoothness
+        tailX += (targetTailX - tailX) * tailEase;
+        tailY += (targetTailY - tailY) * tailEase;
+
+        // Calculate the rotation angle from tip to tail (taking tip as pivot)
+        const dx = tailX - tipX;
+        const dy = tailY - tipY;
+        let rot = Math.atan2(dx, -dy) * (180 / Math.PI); // Naturally allows 360-degree rotation (-180 to 180 deg) without clamping
+
+        // Calculate the translation to position transform-origin (nib tip) at current tipX, tipY
+        const tx = tipX - defaultTipX;
+        const ty = tipY - defaultTipY;
+
+        // Render the transform
+        penContainer.style.transform = `translate3d(${tx}px, ${ty}px, 0) rotate(${rot}deg)`;
+
+        // Render spotlight coordinates relative to the contract-demo-preview-container
+        const spotlightRing = document.querySelector(".spotlight-ring");
+        const contractHighlight = document.querySelector(".contract-demo-preview.highlight-version");
+        
+        if (contractPreviewContainer && (contractHighlight || spotlightRing)) {
+          const previewRect = contractPreviewContainer.getBoundingClientRect();
+          const rectWrapper = penWrapper.getBoundingClientRect();
+          
+          // Pen tip coordinates relative to the viewport
+          const tipScreenX = rectWrapper.left + tipX;
+          const tipScreenY = rectWrapper.top + tipY;
+          
+          // Pen tip coordinates relative to the contract container
+          const spotX = tipScreenX - previewRect.left;
+          const spotY = tipScreenY - previewRect.top;
+          
+          // Update LERP for the spotlight radius
+          const radiusEase = penIsHovered ? 0.08 : 0.04;
+          currentRadius += (targetRadius - currentRadius) * radiusEase;
+          
+          // Apply dynamic clip-path to highlight version directly in JS for maximum compatibility
+          if (contractHighlight) {
+            const contractClean = document.querySelector(".contract-demo-preview.clean-version");
+            if (contractClean) {
+              // Physically sync dimensions to match the clean layer exactly, eliminating browser subpixel discrepancies
+              contractHighlight.style.width = `${contractClean.offsetWidth}px`;
+              contractHighlight.style.height = `${contractClean.offsetHeight}px`;
+            }
+            
+            const clipVal = `circle(${currentRadius}px at ${spotX}px ${spotY}px)`;
+            contractHighlight.style.clipPath = clipVal;
+            contractHighlight.style.webkitClipPath = clipVal;
+          }
+          
+          // Apply position, size, and opacity to the thin grey spotlight ring directly in JS
+          if (spotlightRing) {
+            spotlightRing.style.width = `${2 * currentRadius}px`;
+            spotlightRing.style.height = `${2 * currentRadius}px`;
+            spotlightRing.style.left = `${spotX - currentRadius}px`;
+            spotlightRing.style.top = `${spotY - currentRadius}px`;
+            spotlightRing.style.opacity = `${currentRadius / 90}`;
+          }
+        }
+
+        // Handle the draw of the slogan underline with a smooth physics-based transition
+        const sloganUnderline = document.querySelector(".slogan-underline path");
+        if (sloganUnderline) {
+          let targetOffset = 400;
+          if (hasLoadedDelayPassed || penIsHovered || Math.abs(tx) > 2) {
+            targetOffset = 0;
+          }
+          currentUnderlineOffset += (targetOffset - currentUnderlineOffset) * 0.04;
+          sloganUnderline.style.strokeDashoffset = `${currentUnderlineOffset}`;
+        }
+      }
+
+      requestAnimationFrame(updatePenPhysics);
+    };
+
+    requestAnimationFrame(updatePenPhysics);
   }
 });
