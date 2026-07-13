@@ -1,4 +1,6 @@
-# ContractGuard Demo
+# ContractGuard AI - Trợ lý AI Bảo vệ Pháp lý Hợp đồng
+
+🏆 **Dự án tham dự Cuộc thi Khởi nghiệp/Công nghệ "The NextX - Đấu trường AI Kinh doanh 2026" (Vòng 2 - Đội thi FactCheck AI)**
 
 Prototype local cho luồng rà soát hợp đồng của ContractGuard.
 
