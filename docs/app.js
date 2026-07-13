@@ -251,4 +251,160 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   });
+
+  // --- In-Page Search Feature ---
+  const searchContainer = document.getElementById("searchContainer");
+  const searchToggleBtn = document.getElementById("searchToggleBtn");
+  const searchInput = document.getElementById("searchInput");
+  const searchResultsCount = document.getElementById("searchResultsCount");
+  const searchPrevBtn = document.getElementById("searchPrevBtn");
+  const searchNextBtn = document.getElementById("searchNextBtn");
+  const searchCloseBtn = document.getElementById("searchCloseBtn");
+
+  let searchMatches = [];
+  let currentSearchIndex = -1;
+
+  searchToggleBtn.addEventListener("click", () => {
+    searchContainer.classList.add("active");
+    searchInput.focus();
+  });
+
+  const closeSearch = () => {
+    searchContainer.classList.remove("active");
+    clearSearchHighlight();
+    searchInput.value = "";
+    searchResultsCount.textContent = "0/0";
+    searchMatches = [];
+    currentSearchIndex = -1;
+    updateNavButtons();
+  };
+
+  searchCloseBtn.addEventListener("click", closeSearch);
+
+  // Close search on Escape
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && searchContainer.classList.contains("active")) {
+      closeSearch();
+    }
+  });
+
+  // Close search when clicking outside search container
+  document.addEventListener("click", (e) => {
+    if (searchContainer.classList.contains("active")) {
+      const isClickInside = searchContainer.contains(e.target);
+      if (!isClickInside) {
+        closeSearch();
+      }
+    }
+  });
+
+  searchInput.addEventListener("input", () => {
+    performSearch(searchInput.value.trim());
+  });
+
+  searchInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (searchMatches.length > 0) {
+        if (e.shiftKey) {
+          navigateSearch(-1);
+        } else {
+          navigateSearch(1);
+        }
+      }
+    }
+  });
+
+  searchPrevBtn.addEventListener("click", () => navigateSearch(-1));
+  searchNextBtn.addEventListener("click", () => navigateSearch(1));
+
+  function updateNavButtons() {
+    searchPrevBtn.disabled = searchMatches.length <= 1;
+    searchNextBtn.disabled = searchMatches.length <= 1;
+  }
+
+  function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }
+
+  function highlightTextNodes(element, query) {
+    const regex = new RegExp(`(${escapeRegExp(query)})`, "gi");
+    
+    function walk(node) {
+      if (node.nodeType === 3) { // Text node
+        const text = node.nodeValue;
+        if (regex.test(text)) {
+          const parent = node.parentNode;
+          if (parent) {
+            const fragment = document.createDocumentFragment();
+            const parts = text.split(regex);
+            parts.forEach(part => {
+              if (regex.test(part)) {
+                const mark = document.createElement("mark");
+                mark.className = "search-highlight";
+                mark.textContent = part;
+                fragment.appendChild(mark);
+              } else if (part) {
+                fragment.appendChild(document.createTextNode(part));
+              }
+            });
+            parent.replaceChild(fragment, node);
+          }
+        }
+      } else if (node.nodeType === 1 && node.childNodes && !["SCRIPT", "STYLE", "IFRAME", "NOSCRIPT", "MARK"].includes(node.tagName.toUpperCase())) {
+        const children = Array.from(node.childNodes);
+        children.forEach(child => walk(child));
+      }
+    }
+    
+    walk(element);
+  }
+
+  function clearSearchHighlight() {
+    const highlights = reportContent.querySelectorAll("mark.search-highlight");
+    highlights.forEach(mark => {
+      const parent = mark.parentNode;
+      if (parent) {
+        parent.replaceChild(document.createTextNode(mark.textContent), mark);
+      }
+    });
+    reportContent.normalize();
+  }
+
+  function performSearch(query) {
+    clearSearchHighlight();
+    searchMatches = [];
+    currentSearchIndex = -1;
+    
+    if (!query || query.length < 2) {
+      searchResultsCount.textContent = "0/0";
+      updateNavButtons();
+      return;
+    }
+    
+    highlightTextNodes(reportContent, query);
+    searchMatches = Array.from(reportContent.querySelectorAll("mark.search-highlight"));
+    
+    if (searchMatches.length > 0) {
+      currentSearchIndex = 0;
+      searchMatches[currentSearchIndex].classList.add("search-current");
+      searchResultsCount.textContent = `1/${searchMatches.length}`;
+      searchMatches[currentSearchIndex].scrollIntoView({ behavior: "smooth", block: "center" });
+    } else {
+      searchResultsCount.textContent = "0/0";
+    }
+    updateNavButtons();
+  }
+
+  function navigateSearch(direction) {
+    if (searchMatches.length === 0) return;
+    
+    searchMatches[currentSearchIndex].classList.remove("search-current");
+    
+    currentSearchIndex = (currentSearchIndex + direction + searchMatches.length) % searchMatches.length;
+    
+    searchMatches[currentSearchIndex].classList.add("search-current");
+    searchResultsCount.textContent = `${currentSearchIndex + 1}/${searchMatches.length}`;
+    searchMatches[currentSearchIndex].scrollIntoView({ behavior: "smooth", block: "center" });
+  }
 });

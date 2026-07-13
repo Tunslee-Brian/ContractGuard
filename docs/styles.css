@@ -1761,3 +1761,133 @@ body {
   }
 }
 
+/* Search Widget */
+.search-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  margin-right: 12px;
+}
+
+.btn-search-toggle {
+  background: transparent;
+  color: var(--brand-green);
+  border: 1px solid var(--brand-green);
+  border-radius: 8px;
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  padding: 0;
+}
+
+.btn-search-toggle:hover {
+  background: var(--brand-green-light);
+  transform: translateY(-1px);
+}
+
+.icon-search {
+  transition: transform 0.2s ease;
+}
+
+.btn-search-toggle:hover .icon-search {
+  transform: scale(1.1);
+}
+
+.search-box {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%) scale(0.95);
+  background: #ffffff;
+  border: 1px solid var(--brand-green);
+  box-shadow: var(--shadow-lg);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  gap: 6px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 100;
+  width: 280px;
+}
+
+.search-container.active .search-box {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(-50%) scale(1);
+}
+
+.search-box input {
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: 13px;
+  padding: 6px 4px;
+  flex: 1;
+  width: 100%;
+  color: #1c3b2b;
+}
+
+.search-results-count {
+  font-size: 11px;
+  color: #71717a;
+  min-width: 40px;
+  text-align: center;
+  font-weight: 600;
+  user-select: none;
+}
+
+.search-nav-btn, .search-close-btn {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #71717a;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  padding: 0;
+}
+
+.search-nav-btn:hover:not(:disabled), .search-close-btn:hover {
+  background: #f4f4f5;
+  color: #18181b;
+}
+
+.search-nav-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Highlight styling */
+mark.search-highlight {
+  background-color: #fef08a; /* Soft yellow */
+  color: #000000;
+  border-bottom: 2px solid #eab308;
+  border-radius: 2px;
+  padding: 0 1px;
+}
+
+mark.search-highlight.search-current {
+  background-color: #fde047; /* Bright yellow */
+  box-shadow: 0 0 0 2px #ca8a04;
+  font-weight: bold;
+}
+
+@media screen and (max-width: 768px) {
+  .search-box {
+    width: calc(100vw - 80px);
+    right: -40px;
+  }
+}
+

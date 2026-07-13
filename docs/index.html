@@ -76,6 +76,29 @@
                 </div>
             </div>
             <div class="topbar-actions">
+                <!-- Search Widget -->
+                <div class="search-container" id="searchContainer">
+                    <button class="btn-search-toggle" id="searchToggleBtn" title="Tìm kiếm trong báo cáo">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="icon-search">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </button>
+                    <div class="search-box" id="searchBox">
+                        <input type="text" id="searchInput" placeholder="Tìm nội dung..." aria-label="Tìm kiếm trong báo cáo">
+                        <span class="search-results-count" id="searchResultsCount">0/0</span>
+                        <button class="search-nav-btn" id="searchPrevBtn" title="Kết quả trước" disabled>
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+                        </button>
+                        <button class="search-nav-btn" id="searchNextBtn" title="Kết quả tiếp theo" disabled>
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                        </button>
+                        <button class="search-close-btn" id="searchCloseBtn" title="Đóng">
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        </button>
+                    </div>
+                </div>
+
                 <a href="report.docx" download="ContractGuard_Bao_Cao_Vong_2.docx" class="btn btn-outline" style="text-decoration: none;">
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" class="icon-download">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
