@@ -2845,7 +2845,7 @@ textarea {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem 5%;
+  padding: 0.75rem 5%;
   background: var(--bg);
   border-bottom: 1px solid var(--line);
   position: sticky;
@@ -2860,7 +2860,7 @@ textarea {
 }
 
 .landing-brand .brand-logo {
-  height: 64px;
+  height: 48px;
 }
 .landing-nav-links {
   display: flex;
