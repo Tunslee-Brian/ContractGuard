@@ -168,7 +168,7 @@ button {
   gap: 14px;
   min-width: 0;
 }.brand-logo {
-  height: 42px;
+  height: 52px;
   width: auto;
   object-fit: contain;
   flex-shrink: 0;
@@ -177,7 +177,7 @@ button {
 .brand-copy {
   border-left: 1px solid var(--line);
   padding-left: 14px;
-  height: 24px;
+  height: 30px;
   display: flex;
   align-items: center;
 }
@@ -2860,7 +2860,7 @@ textarea {
 }
 
 .landing-brand .brand-logo {
-  height: 48px;
+  height: 64px;
 }
 .landing-nav-links {
   display: flex;
@@ -3653,7 +3653,7 @@ body.intro-mode .topbar {
 }
 
 .footer-brand-logo {
-  height: 42px;
+  height: 54px;
   width: auto;
   object-fit: contain;
   opacity: 0.95;
@@ -3663,7 +3663,7 @@ body.intro-mode .topbar {
 .footer-brand-copy {
   border-left: 1px solid rgba(255, 255, 255, 0.15);
   padding-left: 12px;
-  height: 22px;
+  height: 30px;
   display: flex;
   align-items: center;
 }
