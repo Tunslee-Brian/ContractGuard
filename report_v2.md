@@ -2,7 +2,7 @@
 
 BÁO CÁO DỰ ÁN VÒNG 2
 
-**<span style="color: #B8860B">“CONTRACTGUARD AI”</span>**
+**<span style="color: #B8860B">“CONTRACTGUARD”</span>**
 
 **<span style="color: #123D2A">TRỢ LÝ AI BẢO VỆ NGƯỜI DÂN TRƯỚC RỦI RO PHÁP LÝ TRONG HỢP ĐỒNG</span>**
 
