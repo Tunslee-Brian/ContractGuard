@@ -207,12 +207,16 @@ body {
   transform: translateY(-1px);
 }
 
-.icon-print {
+.icon-print, .icon-download {
   transition: transform 0.2s ease;
 }
 
 .btn:hover .icon-print {
   transform: scale(1.1);
+}
+
+.btn:hover .icon-download {
+  transform: translateY(1px);
 }
 
 /* Mobile Menu Toggle */
