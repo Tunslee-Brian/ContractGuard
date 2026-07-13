@@ -5,13 +5,13 @@ import zipfile
 
 
 DOCS = [
-    "/Users/huynhquochuy/Downloads/Báo cáo Đề án Kinh doanh_ ContractGuard AI (Vòng 2).docx",
-    "/Users/huynhquochuy/Downloads/Báo cáo tiềm năng thương mại ContractGuard AI (1).docx",
-    "/Users/huynhquochuy/Downloads/Đề án chi tiết_ ContractGuard AI (Vòng 2) (1).docx",
+    "/Users/huynhquochuy/Downloads/Báo cáo Đề án Kinh doanh_ ContractGuard (Vòng 2).docx",
+    "/Users/huynhquochuy/Downloads/Báo cáo tiềm năng thương mại ContractGuard (1).docx",
+    "/Users/huynhquochuy/Downloads/Đề án chi tiết_ ContractGuard (Vòng 2) (1).docx",
     "/Users/huynhquochuy/Downloads/Hop_dong_thue_nha_o_hoan_chinh_test_app.docx",
-    "/Users/huynhquochuy/Downloads/Mô tả dự án ContractGuard AI.docx",
+    "/Users/huynhquochuy/Downloads/Mô tả dự án ContractGuard.docx",
     "/Users/huynhquochuy/Downloads/Phu_luc_II._Hop_dong_thue_nha_o_1505152407.docx",
-    "/Users/huynhquochuy/Downloads/System Prompt & Hướng Dẫn Nghiệp Vụ - ContractGuard AI V2.docx",
+    "/Users/huynhquochuy/Downloads/System Prompt & Hướng Dẫn Nghiệp Vụ - ContractGuard V2.docx",
     "/Users/huynhquochuy/Downloads/TheNextX_Vong2_HuongDan.docx",
 ]
 

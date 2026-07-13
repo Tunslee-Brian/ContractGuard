@@ -1,4 +1,4 @@
-# ContractGuard AI - Trợ lý AI Bảo vệ Pháp lý Hợp đồng
+# ContractGuard - Trợ lý AI Bảo vệ Pháp lý Hợp đồng
 
 🏆 **Dự án tham dự Cuộc thi Khởi nghiệp/Công nghệ "The NextX - Đấu trường AI Kinh doanh 2026" (Vòng 2 - Đội thi FactCheck AI)**
 

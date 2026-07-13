@@ -1,6 +1,6 @@
 /**
  * app.js
- * Client-side script for ContractGuard AI Premium Static Web Report.
+ * Client-side script for ContractGuard Premium Static Web Report.
  * Manages TOC generation, ScrollSpy, Reading Progress, Scroll Reveal, and Lightbox modal.
  */
 
@@ -221,7 +221,7 @@ document.addEventListener("DOMContentLoaded", () => {
   images.forEach(img => {
     img.addEventListener("click", () => {
       // Find the following caption if exists (usually an 'em' tag directly following the image or paragraph)
-      let captionText = img.alt || "Giao diện ContractGuard AI";
+      let captionText = img.alt || "Giao diện ContractGuard";
       
       // Look for custom text underneath
       let nextEl = img.nextElementSibling;
