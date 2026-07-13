@@ -112,24 +112,65 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // 2. Reading Progress Bar
+  // Helper to highlight active TOC item and scroll it into view inside the sidebar
+  function highlightTOCItem(id) {
+    tocContainer.querySelectorAll("li").forEach(li => {
+      li.classList.remove("active");
+    });
+
+    const activeLi = tocContainer.querySelector(`li[data-section-id="${id}"]`);
+    if (activeLi) {
+      activeLi.classList.add("active");
+      
+      // Auto-scroll the sidebar to keep activeLi centered in view
+      const sidebarEl = document.querySelector(".sidebar");
+      if (sidebarEl) {
+        const activeLiRect = activeLi.getBoundingClientRect();
+        const sidebarRect = sidebarEl.getBoundingClientRect();
+        
+        if (activeLiRect.top < sidebarRect.top || activeLiRect.bottom > sidebarRect.bottom) {
+          const targetScrollTop = sidebarEl.scrollTop + (activeLiRect.top - sidebarRect.top) - (sidebarRect.height / 2) + (activeLiRect.height / 2);
+          sidebarEl.scrollTo({
+            top: targetScrollTop,
+            behavior: "smooth"
+          });
+        }
+      }
+      
+      const parentMain = activeLi.closest(".toc-item-h1");
+      if (parentMain && parentMain !== activeLi) {
+        parentMain.classList.add("active");
+      }
+    }
+  }
+
+  // Populate ScrollSpy targets
+  const spyElements = [];
+  sections.forEach(sec => {
+    spyElements.push(sec);
+    const h2s = sec.querySelectorAll("h2");
+    h2s.forEach(h2 => spyElements.push(h2));
+  });
+
+  // 2. Reading Progress Bar & ScrollSpy bottom detector
   window.addEventListener("scroll", () => {
     const docHeight = document.documentElement.scrollHeight - window.innerHeight;
     if (docHeight > 0) {
       const scrolled = (window.scrollY / docHeight) * 100;
       progressBar.style.width = `${scrolled}%`;
     }
+
+    // ScrollSpy bottom fallback: when at the very bottom, force highlight the last item
+    const isAtBottom = (window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 50;
+    if (isAtBottom && spyElements.length > 0) {
+      const lastEl = spyElements[spyElements.length - 1];
+      if (lastEl) {
+        highlightTOCItem(lastEl.id);
+      }
+    }
   });
 
   // 3. ScrollSpy using IntersectionObserver
-  const spyElements = [];
-  sections.forEach(sec => {
-    spyElements.push(sec);
-    // Also spy on H2s for detailed TOC navigation
-    const h2s = sec.querySelectorAll("h2");
-    h2s.forEach(h2 => spyElements.push(h2));
-  });
-
   const spyOptions = {
     root: null,
     rootMargin: "-20% 0px -60% 0px", // triggers when element is roughly in middle of viewport
@@ -138,25 +179,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const id = entry.target.id;
-        
-        // Remove active class from all TOC links
-        tocContainer.querySelectorAll("li").forEach(li => {
-          li.classList.remove("active");
-        });
-
-        // Find TOC item that matches this ID
-        const activeLi = tocContainer.querySelector(`li[data-section-id="${id}"]`);
-        if (activeLi) {
-          activeLi.classList.add("active");
-          
-          // If it's a sub-item, make sure its parent main item is also styled or expanded if needed
-          const parentMain = activeLi.closest(".toc-item-h1");
-          if (parentMain && parentMain !== activeLi) {
-            parentMain.classList.add("active");
-          }
-        }
+      const isAtBottom = (window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 50;
+      if (entry.isIntersecting && !isAtBottom) {
+        highlightTOCItem(entry.target.id);
       }
     });
   }, spyOptions);
