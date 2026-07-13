@@ -1180,25 +1180,25 @@ Nhóm dự kiến thử nghiệm với một đơn vị nhỏ có nhu cầu rà 
   </tr>
   <tr>
     <td style="border: 1px solid #dddddd; padding: 8px; text-align: left"><span style="color: #000000">Quốc Huy (Team Leader)</span></td>
-    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left"><span style="color: #000000">Điều phối dự án, tổng hợp báo cáo</span></td>
+    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left"><span style="color: #000000">AI & Frontend</span></td>
     <td style="border: 1px solid #dddddd; padding: 8px; text-align: left"><span style="color: #000000">Quản lý tiến độ, chỉnh nội dung, kiểm tra demo, chuẩn hóa câu chuyện thuyết trình.</span></td>
     <td style="border: 1px solid #dddddd; padding: 8px; text-align: left"><span style="color: #000000">Báo cáo hoàn chỉnh, checklist nộp bài, kịch bản demo 60 giây.</span></td>
   </tr>
   <tr>
     <td style="border: 1px solid #dddddd; padding: 8px; text-align: left; background-color: #FAFAFA"><span style="color: #000000">Thanh Lâm</span></td>
-    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left; background-color: #FAFAFA"><span style="color: #000000">Nghiên cứu thị trường</span></td>
+    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left; background-color: #FAFAFA"><span style="color: #000000">Business Analyst</span></td>
     <td style="border: 1px solid #dddddd; padding: 8px; text-align: left; background-color: #FAFAFA"><span style="color: #000000">Tìm nguồn số liệu, phân tích khoảng trống ngành, hỗ trợ checklist pháp lý.</span></td>
     <td style="border: 1px solid #dddddd; padding: 8px; text-align: left; background-color: #FAFAFA"><span style="color: #000000">Bảng dữ liệu nguồn, bảng so sánh giải pháp, nội dung thị trường.</span></td>
   </tr>
   <tr>
     <td style="border: 1px solid #dddddd; padding: 8px; text-align: left"><span style="color: #000000">Uyên Minh</span></td>
-    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left"><span style="color: #000000">Persona và UX/UI</span></td>
+    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left"><span style="color: #000000">Legal Research</span></td>
     <td style="border: 1px solid #dddddd; padding: 8px; text-align: left"><span style="color: #000000">Xác định chân dung khách hàng, hành trình người dùng, thiết kế giao diện split-view.</span></td>
     <td style="border: 1px solid #dddddd; padding: 8px; text-align: left"><span style="color: #000000">Persona, wireframe, ảnh prototype.</span></td>
   </tr>
   <tr>
     <td style="border: 1px solid #dddddd; padding: 8px; text-align: left; background-color: #FAFAFA"><span style="color: #000000">Minh Tuấn</span></td>
-    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left; background-color: #FAFAFA"><span style="color: #000000">Khảo sát và prompt/backend</span></td>
+    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left; background-color: #FAFAFA"><span style="color: #000000">AI & Fullstack</span></td>
     <td style="border: 1px solid #dddddd; padding: 8px; text-align: left; background-color: #FAFAFA"><span style="color: #000000">Lập kịch bản Mom Test, quay video, tinh chỉnh prompt phân tích hợp đồng.</span></td>
     <td style="border: 1px solid #dddddd; padding: 8px; text-align: left; background-color: #FAFAFA"><span style="color: #000000">Video phỏng vấn, bộ câu hỏi, prompt nghiệp vụ, test case hợp đồng cài bẫy.</span></td>
   </tr>
