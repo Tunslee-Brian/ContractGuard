@@ -115,23 +115,11 @@ body {
   min-width: 0;
 }
 
-.brand-mark {
-  width: 46px;
-  height: 46px;
-  display: grid;
-  place-items: center;
-  background: var(--brand-green);
-  border: 1px solid var(--brand-gold);
-  border-radius: 50%;
-  box-shadow: 0 4px 12px rgba(28, 59, 43, 0.15);
-  padding: 8px;
+.brand-logo {
+  height: 38px;
+  width: auto;
+  object-fit: contain;
   flex-shrink: 0;
-}
-
-.brand-bird {
-  width: 32px;
-  height: 32px;
-  color: var(--brand-gold);
 }
 
 .brand-title {
@@ -674,10 +662,10 @@ body {
   gap: 16px;
 }
 
-.footer-brand-bird {
-  width: 48px;
-  height: 48px;
-  color: var(--brand-gold);
+.footer-brand-logo {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
   opacity: 0.8;
 }
 
