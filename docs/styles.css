@@ -122,11 +122,12 @@ body {
   flex-shrink: 0;
 }
 
-.brand-title {
-  font-family: "Playfair Display", serif;
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--brand-green);
+.brand-copy {
+  border-left: 1px solid var(--line);
+  padding-left: 16px;
+  height: 24px;
+  display: flex;
+  align-items: center;
 }
 
 .brand-subtitle {
