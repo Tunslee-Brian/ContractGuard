@@ -1585,11 +1585,12 @@ body {
 
 .interview-video {
   width: 100%;
-  height: auto;
+  aspect-ratio: 16 / 9;
   display: block;
   border-radius: 8px;
   outline: none;
   background: #000000;
+  border: none;
 }
 
 .video-player-wrapper::after {
