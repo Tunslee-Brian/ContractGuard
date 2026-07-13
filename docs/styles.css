@@ -922,12 +922,18 @@ body {
   background: var(--brand-green-light);
   border-radius: 50%;
   flex-shrink: 0;
+  color: var(--brand-green);
 }
 
-.value-card:nth-child(2) .value-card-icon::before { content: "👥"; font-size: 20px; }
-.value-card:nth-child(3) .value-card-icon::before { content: "👵"; font-size: 20px; }
-.value-card:nth-child(4) .value-card-icon::before { content: "🎓"; font-size: 20px; }
-.value-card:nth-child(5) .value-card-icon::before { content: "🏢"; font-size: 20px; }
+.value-card-icon svg {
+  width: 22px;
+  height: 22px;
+  transition: transform 0.3s var(--ease);
+}
+
+.value-card:hover .value-card-icon svg {
+  transform: scale(1.15);
+}
 
 .value-card-content {
   flex: 1;
