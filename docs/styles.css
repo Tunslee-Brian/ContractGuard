@@ -1891,3 +1891,25 @@ mark.search-highlight.search-current {
   }
 }
 
+/* Gold Button & External Link icon styles */
+.btn-gold {
+  background: var(--brand-gold);
+  color: #ffffff !important;
+  border: 1px solid var(--brand-gold);
+}
+
+.btn-gold:hover {
+  background: var(--brand-gold-dark);
+  color: #ffffff !important;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.icon-external {
+  transition: transform 0.2s ease;
+}
+
+.btn:hover .icon-external {
+  transform: translate(1px, -1px);
+}
+
