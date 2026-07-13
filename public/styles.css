@@ -150,10 +150,9 @@ button {
 
 .topbar {
   min-height: 76px;
-  display: grid;
-  grid-template-columns: minmax(220px, 1fr) auto minmax(220px, 1fr);
+  display: flex;
   align-items: center;
-  gap: 18px;
+  justify-content: flex-start;
   padding: 14px 24px;
   background: rgba(255, 255, 255, 0.92);
   border-bottom: 1px solid var(--line);
@@ -576,7 +575,7 @@ button:disabled:hover {
   display: grid;
   grid-template-columns: minmax(300px, 380px) minmax(0, 1fr);
   gap: 14px;
-  align-items: start;
+  align-items: stretch;
   width: min(1600px, calc(100vw - 32px));
   margin: 0 auto;
   padding: 18px 0 0;
@@ -635,11 +634,7 @@ button:disabled:hover {
 }
 
 .ingest-bar {
-  display: grid;
-  grid-template-columns: minmax(220px, 1fr) auto;
-  gap: 12px;
-  align-items: center;
-  padding: 12px;
+  display: none !important;
 }
 
 .dropzone {
@@ -866,6 +861,7 @@ button:disabled:hover {
   min-height: 132px;
   display: grid;
   grid-template-columns: 104px minmax(0, 1fr);
+  grid-template-rows: auto 1fr;
   gap: 14px;
   align-items: center;
   padding: 16px;
@@ -917,6 +913,31 @@ button:disabled:hover {
 .summary-copy p:last-child {
   margin: 8px 0 0;
   color: var(--muted);
+  line-height: 1.45;
+}
+
+.summary-details-container {
+  grid-column: 1 / -1;
+  align-self: start;
+  border-top: 1px dashed var(--line);
+  padding-top: 12px;
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.summary-details-container p {
+  margin: 0 0 4px 0;
+  color: #53615d;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.summary-details-container small {
+  display: block;
+  color: var(--muted);
+  font-size: 13px;
   line-height: 1.45;
 }
 
@@ -2648,11 +2669,6 @@ textarea {
 }
 
 @media (max-width: 1080px) {
-  .topbar {
-    grid-template-columns: 1fr;
-    align-items: stretch;
-  }
-
   .intro-view,
   .report-overview {
     grid-template-columns: 1fr;

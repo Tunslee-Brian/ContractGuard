@@ -29,3 +29,6 @@ work/*.pdf
 
 # Build and packaged distributions
 outputs/
+
+
+docs/videos/

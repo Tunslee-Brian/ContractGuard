@@ -56,6 +56,7 @@ const selectors = {
   scoreValue: document.querySelector("#scoreValue"),
   riskLevel: document.querySelector("#riskLevel"),
   riskSummary: document.querySelector("#riskSummary"),
+  riskSummaryDetails: document.querySelector("#riskSummaryDetails"),
   countAll: document.querySelector("#countAll"),
   countRed: document.querySelector("#countRed"),
   countYellow: document.querySelector("#countYellow"),
@@ -180,6 +181,10 @@ function renderProcessingState(title, message) {
   selectors.scoreValue.textContent = "--";
   selectors.riskLevel.textContent = "Đang phân tích";
   selectors.riskSummary.textContent = message;
+  if (selectors.riskSummaryDetails) {
+    selectors.riskSummaryDetails.classList.add("is-hidden");
+    selectors.riskSummaryDetails.innerHTML = "";
+  }
   selectors.countAll.textContent = "0";
   selectors.countRed.textContent = "0";
   selectors.countYellow.textContent = "0";
@@ -220,6 +225,10 @@ function renderErrorState(message) {
   selectors.scoreValue.textContent = "--";
   selectors.riskLevel.textContent = "Không phân tích được";
   selectors.riskSummary.textContent = message;
+  if (selectors.riskSummaryDetails) {
+    selectors.riskSummaryDetails.classList.add("is-hidden");
+    selectors.riskSummaryDetails.innerHTML = "";
+  }
   selectors.countAll.textContent = "0";
   selectors.countRed.textContent = "0";
   selectors.countYellow.textContent = "0";
@@ -391,6 +400,17 @@ function renderSummary() {
   selectors.riskLevel.textContent = riskLabel(summary.overallRisk);
   const readiness = analysis.deepAnalysis?.readiness?.label;
   selectors.riskSummary.textContent = `${counts.RED} Đỏ, ${counts.YELLOW} Vàng, ${counts.GREEN} Xanh sau khi quét ${summary.scannedCategories} hạng mục.${readiness ? ` ${readiness}.` : ""}`;
+  
+  const riskSummaryDetails = selectors.riskSummaryDetails;
+  if (riskSummaryDetails) {
+    const contractSummary = extractContractSummary(analysis);
+    riskSummaryDetails.innerHTML = `
+      <p>${escapeHtml(contractSummary.riskSummary.reason)}</p>
+      <small>${escapeHtml(contractSummary.riskSummary.action)}</small>
+    `;
+    riskSummaryDetails.classList.remove("is-hidden");
+  }
+
   selectors.countAll.textContent = total;
   selectors.countRed.textContent = counts.RED;
   selectors.countYellow.textContent = counts.YELLOW;
@@ -575,34 +595,6 @@ function renderDeepInsights() {
         </div>
       `).join("")}
     </div>
-    <section class="contract-risk-summary" aria-label="Tóm tắt rủi ro">
-      <div class="contract-risk-summary-head">
-        <div>
-          <span>Tóm tắt rủi ro</span>
-          <strong>${escapeHtml(contractSummary.riskSummary.label)}</strong>
-        </div>
-        <b>${escapeHtml(String(contractSummary.riskSummary.score))}/100</b>
-      </div>
-      <div class="risk-count-row" aria-label="Số lượng rủi ro theo mức độ">
-        <span class="risk-count RED">Đỏ <strong>${escapeHtml(String(contractSummary.riskSummary.counts.RED || 0))}</strong></span>
-        <span class="risk-count YELLOW">Vàng <strong>${escapeHtml(String(contractSummary.riskSummary.counts.YELLOW || 0))}</strong></span>
-        <span class="risk-count GREEN">Xanh <strong>${escapeHtml(String(contractSummary.riskSummary.counts.GREEN || 0))}</strong></span>
-      </div>
-      <p>${escapeHtml(contractSummary.riskSummary.reason)}</p>
-      <small>${escapeHtml(contractSummary.riskSummary.action)}</small>
-    </section>
-    ${contractSummary.topRisks.length ? `
-      <div class="summary-risk-strip">
-        <span>Rủi ro nổi bật</span>
-        <div>
-          ${contractSummary.topRisks.map((risk) => `
-            <button class="summary-risk-chip ${risk.severity}" type="button" data-chat-prompt="Giải thích rủi ro '${escapeHtml(risk.label)}' trong bối cảnh tóm tắt hợp đồng này">
-              ${escapeHtml(risk.label)}
-            </button>
-          `).join("")}
-        </div>
-      </div>
-    ` : ""}
   `;
 }
 

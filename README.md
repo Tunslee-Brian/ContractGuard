@@ -1,6 +1,6 @@
-# ContractGuard AI Demo
+# ContractGuard Demo
 
-Prototype local cho luồng rà soát hợp đồng của ContractGuard AI.
+Prototype local cho luồng rà soát hợp đồng của ContractGuard.
 
 ## Chạy dự án
 

@@ -1,4 +1,4 @@
-# Python dependencies for ContractGuard AI backend and helper scripts
+# Python dependencies for ContractGuard backend and helper scripts
 
 # Core backend libraries
 google-generativeai>=0.8.0

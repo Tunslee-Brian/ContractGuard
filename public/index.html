@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>ContractGuard AI</title>
+    <title>ContractGuard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Allura&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
@@ -32,18 +32,18 @@
             </svg>
           </div>
           <div class="brand-copy">
-            <h1>ContractGuard AI</h1>
-            <span>Legal risk scanner</span>
+            <h1>ContractGuard</h1>
+            <span>Safe to sign</span>
           </div>
         </div>
 
-        <div class="contract-switch" role="group" aria-label="Loại hợp đồng">
+        <div class="contract-switch is-hidden" role="group" aria-label="Loại hợp đồng">
           <button class="switch-btn is-active" data-contract-type="Hợp đồng thuê nhà">Thuê nhà</button>
           <button class="switch-btn" data-contract-type="Hợp đồng bảo hiểm">Bảo hiểm</button>
           <button class="switch-btn" data-contract-type="Hợp đồng vay / tài chính">Vay vốn</button>
         </div>
 
-        <div class="top-actions">
+        <div class="top-actions is-hidden">
           <button class="ghost-btn" id="homeBtn" type="button">Trang đầu</button>
           <button class="ghost-btn demo-highlight-btn" id="sampleBtn" type="button">Mẫu demo</button>
           <button class="primary-btn" id="exportBtn" type="button">Xuất PDF</button>
@@ -453,10 +453,8 @@
               <p class="eyebrow">Risk report</p>
               <h2 id="riskLevel">Chưa có kết quả</h2>
               <p id="riskSummary">Báo cáo sẽ xuất hiện sau khi quét hợp đồng.</p>
-              <button class="ask-context-btn summary-chat-btn" type="button" data-chat-prompt="Tóm tắt các rủi ro chính và lý do hợp đồng bị chấm điểm như hiện tại">
-                Hỏi thêm
-              </button>
             </div>
+            <div id="riskSummaryDetails" class="summary-details-container is-hidden"></div>
           </section>
 
           <section class="deep-insights" id="deepInsights" aria-label="Phân tích sâu">
@@ -614,7 +612,7 @@
         <div class="chat-head-info">
           <div class="chat-head-avatar">🤖</div>
           <div>
-            <p class="eyebrow"><span class="chat-head-online-dot"></span>ContractGuard AI</p>
+            <p class="eyebrow"><span class="chat-head-online-dot"></span>ContractGuard</p>
             <h2>Hỏi đáp hợp đồng</h2>
           </div>
         </div>
@@ -667,8 +665,8 @@
               </svg>
             </div>
             <div class="footer-brand-copy">
-              <h3>ContractGuard AI</h3>
-              <span>Legal Risk Scanner</span>
+              <h3>ContractGuard</h3>
+              <span>Safe to sign</span>
             </div>
           </div>
           <p class="footer-desc">
@@ -691,7 +689,7 @@
         <div class="footer-col">
           <h4 class="footer-col-title">THÔNG TIN DỰ ÁN</h4>
           <ul class="footer-links">
-            <li><span class="link-label">Dự án:</span><strong>ContractGuard AI</strong></li>
+            <li><span class="link-label">Dự án:</span><strong>ContractGuard</strong></li>
             <li><span class="link-label">Cuộc thi:</span><strong>THE NEXTX 2026</strong></li>
             <li><span class="link-label">Giải pháp:</span><strong>Legaltech AI</strong></li>
             <li><span class="link-label">Công nghệ:</span><strong>LLMs & RAG Engine</strong></li>
@@ -726,7 +724,7 @@
       <div class="footer-bottom">
         <div class="footer-bottom-container">
           <p class="footer-copyright">
-            © 2026 ContractGuard AI. Phát triển bởi team <strong>factcheckAI</strong> tại THE NEXTX 2026. Bảo lưu mọi quyền.
+            © 2026 ContractGuard. Phát triển bởi team <strong>factcheckAI</strong> tại THE NEXTX 2026. Bảo lưu mọi quyền.
           </p>
           <p class="footer-disclaimer">
             <strong>Tuyên bố miễn trừ:</strong> Kết quả rà soát từ hệ thống AI mang tính chất tham khảo, không thay thế cho các tư vấn pháp lý chuyên nghiệp từ luật sư.

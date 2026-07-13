@@ -2,7 +2,7 @@
   "name": "contractguard-ai-demo",
   "version": "1.0.0",
   "private": true,
-  "description": "Local MVP demo for ContractGuard AI contract risk review.",
+  "description": "Local MVP demo for ContractGuard contract risk review.",
   "scripts": {
     "dev": "node server.js",
     "start": "node server.js",

@@ -366,7 +366,7 @@ async function handleChat(req, res) {
 
     // ── System prompt ──
     const systemPrompt = [
-      `Bạn là **ContractGuard AI** – trợ lý pháp lý thông minh chuyên phân tích hợp đồng Việt Nam.`,
+      `Bạn là **ContractGuard** – trợ lý pháp lý thông minh chuyên phân tích hợp đồng Việt Nam.`,
       `Bạn có khả năng đọc toàn bộ nội dung hợp đồng, các thẻ rủi ro (Đỏ/Vàng/Xanh), deep analysis và kết quả tìm kiếm web.`,
       ``,
       `=== DỮ LIỆU HỢP ĐỒNG VÀ BÁO CÁO ===`,
@@ -510,10 +510,25 @@ function compactField(value = "") {
 
 function serveStatic(req, res) {
   const requestUrl = new URL(req.url, `http://${req.headers.host || "localhost"}`);
-  const pathname = decodeURIComponent(requestUrl.pathname === "/" ? "/index.html" : requestUrl.pathname);
-  const target = path.normalize(path.join(PUBLIC_DIR, pathname));
+  let pathname = decodeURIComponent(requestUrl.pathname);
+  
+  let baseDir = PUBLIC_DIR;
+  if (pathname.startsWith("/docs/")) {
+    baseDir = path.join(ROOT, "docs");
+    pathname = pathname.substring(5); // strip "/docs"
+  } else if (pathname === "/docs") {
+    res.writeHead(301, { Location: "/docs/" });
+    res.end();
+    return;
+  }
 
-  if (!target.startsWith(PUBLIC_DIR)) {
+  if (pathname === "/" || pathname === "") {
+    pathname = "/index.html";
+  }
+
+  const target = path.normalize(path.join(baseDir, pathname));
+
+  if (!target.startsWith(baseDir)) {
     send(res, 403, "Forbidden", { "Content-Type": "text/plain; charset=utf-8" });
     return;
   }
@@ -557,5 +572,5 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, "0.0.0.0", () => {
-  console.log(`ContractGuard AI running on port ${PORT}`);
+  console.log(`ContractGuard running on port ${PORT}`);
 });

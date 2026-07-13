@@ -30,7 +30,7 @@ def main() -> None:
     for page in range(1, 3):
         doc.setFont("Helvetica", 10)
         y = height - 46
-        doc.drawString(44, y, f"ContractGuard AI PDF extraction test - Trang {page}/2")
+        doc.drawString(44, y, f"ContractGuard PDF extraction test - Trang {page}/2")
         y -= 24
         for _ in range(52):
             text = lines[cursor % len(lines)]
