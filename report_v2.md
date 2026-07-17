@@ -81,11 +81,19 @@ Vấn đề này quan trọng vì hợp đồng là điểm “chốt” của m
 
 MVP tập trung vào hợp đồng thuê nhà vì dễ chứng minh: có tiền cọc, thời hạn thanh toán, nghĩa vụ sửa chữa, chấm dứt trước hạn, quyền kiểm tra nhà và phí phát sinh. Giai đoạn tiếp theo mở rộng sang bảo hiểm, vay vốn, hợp đồng kỳ nghỉ và hợp đồng lao động.
 
-**<span style="color: #548DD4">6. Mục tiêu và phương pháp thực hiện</span>**
+## <span style="color: #4F81BD">6. Mục tiêu và phương pháp thực hiện</span>
 
 Mục tiêu của dự án là xây dựng một AI Legal Assistant dành cho người dùng phổ thông tại Việt Nam, có khả năng đọc, phát hiện rủi ro, giải thích điều khoản bằng ngôn ngữ đời thường và đề xuất hành động cụ thể trước khi ký. Trong MVP, nhóm ưu tiên: hỗ trợ PDF/DOCX/ảnh; phân loại Đỏ - Vàng - Xanh; highlight đoạn gốc; đề xuất câu sửa; và ẩn dữ liệu cá nhân trước khi AI xử lý.
 
 Nhóm kết hợp bốn phương pháp: (1) phân tích - tổng hợp tài liệu, số liệu thị trường và mẫu hợp đồng; (2) phỏng vấn khách hàng theo The Mom Test, tập trung vào hành vi quá khứ và thiệt hại thật; (3) thiết kế prototype theo luồng demo 60 giây; (4) kiểm thử bằng hợp đồng có cài bẫy để đo khả năng phát hiện rủi ro, độ chính xác highlight và mức dễ hiểu của lời giải thích.
+
+## <span style="color: #4F81BD">7. Vai trò của AI trong quá trình nghiên cứu và tổng hợp báo cáo</span>
+
+Không chỉ đóng vai trò là công nghệ lõi trong giải pháp phần mềm ContractGuard, Trí tuệ nhân tạo (AI) còn được nhóm tích hợp sâu sắc như một trợ lý đắc lực trong suốt tiến trình nghiên cứu thị trường và hoàn thiện báo cáo:
+
+*   **Xử lý dữ liệu định lượng (n = 167)**: Nhóm sử dụng AI (kết hợp các đoạn mã script Python) để làm sạch, phân loại tự động các phản hồi mở dạng chữ của 167 người tham gia khảo sát, giúp nhóm nhanh chóng gom cụm các chủ đề nỗi đau phổ biến (topic modeling) để làm cơ sở thiết kế sản phẩm.
+*   **Tra cứu chéo và hệ thống hóa cơ sở pháp lý**: Trong việc xây dựng bộ checklist 40+ rủi ro hợp đồng phức tạp, thành viên phụ trách Legal Research đã sử dụng các AI Agent hỗ trợ tìm kiếm và định vị nhanh các điều khoản tương đương giữa Bộ luật Dân sự 2015, Luật Nhà ở 2023 và Luật Thương mại 2005. Nhờ đó, thời gian hoàn thành danh mục căn cứ pháp lý đã được rút ngắn gấp 3 lần.
+*   **Biên tập báo cáo & tối ưu hóa mã nguồn**: AI hỗ trợ nhóm rà soát ngữ nghĩa báo cáo để đảm bảo sự mạch lạc, chuyên nghiệp. Đồng thời, AI cũng đóng vai trò hỗ trợ sinh mã nguồn HTML/CSS/JS chất lượng cao cho trang báo cáo web (`docs/index.html`), giúp giao diện responsive tốt và tối ưu hóa SEO.
 
 # <span style="color: #123D2A">PHẦN II: CƠ SỞ LÝ LUẬN, THỊ TRƯỜNG VÀ BẰNG CHỨNG DỮ LIỆU</span>
 
@@ -1179,28 +1187,28 @@ Nhóm dự kiến thử nghiệm với một đơn vị nhỏ có nhu cầu rà 
     <th style="border: 1px solid #dddddd; padding: 8px; text-align: left; background-color: #124A38; color: #ffffff"><strong><span style="color: #FFFFFF">Đầu ra đo lường được</span></strong></th>
   </tr>
   <tr>
-    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left"><span style="color: #000000">Quốc Huy (Team Leader)</span></td>
+    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left"><span style="color: #000000">Huỳnh Quốc Huy (Team Leader)</span></td>
     <td style="border: 1px solid #dddddd; padding: 8px; text-align: left"><span style="color: #000000">AI & Frontend</span></td>
-    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left"><span style="color: #000000">Quản lý tiến độ, chỉnh nội dung, kiểm tra demo, chuẩn hóa câu chuyện thuyết trình.</span></td>
-    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left"><span style="color: #000000">Báo cáo hoàn chỉnh, checklist nộp bài, kịch bản demo 60 giây.</span></td>
+    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left"><span style="color: #000000">Quản lý tiến độ dự án, thiết kế và phát triển giao diện Web/Dashboard tương tác (split-view), tích hợp API và tối ưu hóa trải nghiệm người dùng frontend.</span></td>
+    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left"><span style="color: #000000">Giao diện web hoàn chỉnh (Landing & Dashboard), mã nguồn frontend client-side, kịch bản demo 60 giây và checklist nộp bài.</span></td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left; background-color: #FAFAFA"><span style="color: #000000">Thanh Lâm</span></td>
+    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left; background-color: #FAFAFA"><span style="color: #000000">Lê Thị Thanh Lâm</span></td>
     <td style="border: 1px solid #dddddd; padding: 8px; text-align: left; background-color: #FAFAFA"><span style="color: #000000">Business Analyst</span></td>
-    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left; background-color: #FAFAFA"><span style="color: #000000">Tìm nguồn số liệu, phân tích khoảng trống ngành, hỗ trợ checklist pháp lý.</span></td>
-    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left; background-color: #FAFAFA"><span style="color: #000000">Bảng dữ liệu nguồn, bảng so sánh giải pháp, nội dung thị trường.</span></td>
+    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left; background-color: #FAFAFA"><span style="color: #000000">Phân tích thị trường, xác định chân dung khách hàng (Persona) và hành trình người dùng, lập kịch bản phỏng vấn Mom Test và xây dựng mô hình tài chính dự án.</span></td>
+    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left; background-color: #FAFAFA"><span style="color: #000000">Bộ Persona và User Journey, kết quả khảo sát định lượng (n=167) và bảng mô phỏng tài chính (financial model).</span></td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left"><span style="color: #000000">Uyên Minh</span></td>
+    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left"><span style="color: #000000">Nguyễn Như Uyên Minh</span></td>
     <td style="border: 1px solid #dddddd; padding: 8px; text-align: left"><span style="color: #000000">Legal Research</span></td>
-    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left"><span style="color: #000000">Xác định chân dung khách hàng, hành trình người dùng, thiết kế giao diện split-view.</span></td>
-    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left"><span style="color: #000000">Persona, wireframe, ảnh prototype.</span></td>
+    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left"><span style="color: #000000">Nghiên cứu các quy định pháp luật liên quan (Luật Dân sự, Luật Nhà ở,...), xây dựng checklist pháp lý chuyên biệt và rà soát các điều khoản cài bẫy rủi ro.</span></td>
+    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left"><span style="color: #000000">Danh mục 40+ rủi ro hợp đồng, bộ cơ sở dữ liệu căn cứ pháp lý tham chiếu, và nội dung khuyến nghị pháp lý hiển thị trên chatbot.</span></td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left; background-color: #FAFAFA"><span style="color: #000000">Minh Tuấn</span></td>
-    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left; background-color: #FAFAFA"><span style="color: #000000">AI & Fullstack</span></td>
-    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left; background-color: #FAFAFA"><span style="color: #000000">Lập kịch bản Mom Test, quay video, tinh chỉnh prompt phân tích hợp đồng.</span></td>
-    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left; background-color: #FAFAFA"><span style="color: #000000">Video phỏng vấn, bộ câu hỏi, prompt nghiệp vụ, test case hợp đồng cài bẫy.</span></td>
+    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left; background-color: #FAFAFA"><span style="color: #000000">Lê Minh Tuấn</span></td>
+    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left; background-color: #FAFAFA"><span style="color: #000000">AI & Backend</span></td>
+    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left; background-color: #FAFAFA"><span style="color: #000000">Thiết kế kiến trúc backend, phát triển engine phân tích hợp đồng sử dụng LLMs & RAG, tối ưu hóa các prompt nghiệp vụ và hệ thống API.</span></td>
+    <td style="border: 1px solid #dddddd; padding: 8px; text-align: left; background-color: #FAFAFA"><span style="color: #000000">Mã nguồn backend (NodeJS server & Python analyzer), hệ thống database, bộ câu hỏi nghiệp vụ và bộ test case hợp đồng thử nghiệm.</span></td>
   </tr>
 </table>
 
